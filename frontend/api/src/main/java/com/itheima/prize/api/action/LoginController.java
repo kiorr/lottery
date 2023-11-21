@@ -35,37 +35,13 @@ public class LoginController {
             @ApiImplicitParam(name="password",value = "密码",required = true)
     })
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
-        Integer errortimes = (Integer) redisUtil.get(RedisKeys.USERLOGINTIMES+account);
-        if (errortimes != null && errortimes >= 5){
-            return new ApiResult(0, "密码错误5次，请5分钟后再登录",null);
-        }
-        CardUserExample userExample = new CardUserExample();
-        userExample.createCriteria().andUnameEqualTo(account).andPasswdEqualTo(PasswordUtil.encodePassword(password));
-        List<CardUser> users = userMapper.selectByExample(userExample);
-        if (users != null && users.size() > 0) {
-            CardUser user = users.get(0);
-            //信息脱敏，不要将敏感信息带入session以免其他接口不小心泄露到前台
-            user.setPasswd(null);
-            user.setIdcard(null);
-            HttpSession session = request.getSession();
-            session.setAttribute("user",user);
-            return new ApiResult(1, "登录成功",user);
-        } else {
-            //错误计数，5次锁定5分钟
-            redisUtil.incr(RedisKeys.USERLOGINTIMES+account,1);
-            redisUtil.expire(RedisKeys.USERLOGINTIMES+account,60 * 5);
-            return new ApiResult(0, "账户名或密码错误",null);
-        }
+        return null;
     }
 
     @GetMapping("/logout")
     @ApiOperation(value = "退出")
     public ApiResult logout(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        if (session != null){
-            session.invalidate();
-        }
-        return new ApiResult(1, "退出成功",null);
+        return null;
     }
 
 }

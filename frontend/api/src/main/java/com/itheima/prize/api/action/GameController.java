@@ -39,27 +39,7 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        Date now = new Date();
-        CardGameExample example = new CardGameExample();
-        CardGameExample.Criteria c = example.createCriteria();
-        switch (status) {
-            case -1:
-                //查全部
-                break;
-            case 0:
-                //未开始
-                c.andStarttimeGreaterThan(now);break;
-            case 1:
-                //进行中
-                c.andStarttimeLessThanOrEqualTo(now).andEndtimeGreaterThan(now);break;
-            case 2:
-                //已结束
-                c.andEndtimeLessThanOrEqualTo(now);break;
-        }
-        long total = gameMapper.countByExample(example);
-        example.setOrderByClause("starttime desc");
-        PageHelper.startPage(curpage, limit);
-        return new ApiResult(1,"成功",new PageBean<CardGame>(curpage,limit,total,gameMapper.selectByExample(example)));
+        return null;
     }
 
     @GetMapping("/info/{gameid}")
@@ -68,7 +48,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",gameMapper.selectByPrimaryKey(gameid));
+        return null;
     }
 
     @GetMapping("/products/{gameid}")
@@ -77,7 +57,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",loadMapper.getByGameId(gameid));
+        return null;
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -88,12 +68,7 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        ViewCardUserHitExample example = new ViewCardUserHitExample();
-        example.createCriteria().andGameidEqualTo(gameid);
-        long total = hitMapper.countByExample(example);
-        PageHelper.startPage(curpage, limit);
-        List<ViewCardUserHit> all = hitMapper.selectByExample(example);
-        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(curpage,limit,total,all));
+        return null;
     }
 
 
