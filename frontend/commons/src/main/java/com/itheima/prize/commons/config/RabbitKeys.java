@@ -8,6 +8,4 @@ public class RabbitKeys {
     //中奖路由名称
     public final static String EXCHANGE_DIRECT = "prize_exchange_direct";
 
-
-
 }

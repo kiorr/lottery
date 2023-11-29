@@ -1,26 +1,24 @@
 package com.itheima.prize.api.action;
 
-import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
-import com.itheima.prize.commons.db.mapper.CardUserGamesMapper;
-import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
+import com.itheima.prize.commons.db.service.CardUserGamesService;
+import com.itheima.prize.commons.db.service.CardUserHitService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
-import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -30,14 +28,24 @@ public class UserController {
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private ViewCardUserHitMapper hitMapper;
+    private CardUserHitService cardUserHitService;
     @Autowired
-    private CardUserGamesMapper cardUserGamesMapper;
+    private CardUserGamesService cardUserGamesService;
 
     @GetMapping("/info")
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
-        return null;
+        CardUser cardUser = (CardUser) request.getSession().getAttribute("user");
+        Integer games = cardUserGamesService.getByUserId(cardUser.getId());
+        Integer products = cardUserHitService.getByUserid(cardUser.getId());
+        CardUserDto cardUserDto = new CardUserDto();
+        BeanUtils.copyProperties(cardUser, cardUserDto);
+        cardUserDto.setGames(games);
+        cardUserDto.setProducts(products);
+        Date date = new Date();
+        ApiResult apiResult = new ApiResult(1, "成功", cardUserDto);
+        apiResult.setNow(date);
+        return apiResult;
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -48,8 +56,13 @@ public class UserController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
-        return null;
-    }
 
+        CardUser user = (CardUser) request.getSession().getAttribute("user");
+        PageBean<ViewCardUserHit> page = cardUserHitService.selectByExample(curpage, limit, gameid, user.getId());
+        ApiResult<PageBean> apiResult = new ApiResult<>(1, "成功", page);
+        Date date = new Date();
+        apiResult.setNow(date);
+        return apiResult;
+    }
 
 }

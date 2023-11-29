@@ -1,5 +1,6 @@
 package com.itheima.prize.commons.db.mapper;
 
+import com.github.pagehelper.Page;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import java.util.List;
@@ -78,4 +79,6 @@ public interface ViewCardUserHitMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") ViewCardUserHit record, @Param("example") ViewCardUserHitExample example);
+
+    Page<ViewCardUserHit> pageQuery(@Param("gameid") Integer gameid, @Param("userid") Integer userid);
 }

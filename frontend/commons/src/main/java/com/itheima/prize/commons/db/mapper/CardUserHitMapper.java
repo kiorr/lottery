@@ -125,4 +125,7 @@ public interface CardUserHitMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardUserHit record);
+
+    @Select("select count(*) from card_user_hit where userid = #{id} order by userid")
+    Integer getCountByUserId(Integer id);
 }
