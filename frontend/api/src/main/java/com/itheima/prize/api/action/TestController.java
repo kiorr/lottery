@@ -58,7 +58,7 @@ public class TestController {
 
 
 
-        @GetMapping("/luatest/{gameid}")
+    @GetMapping("/luatest/{gameid}")
     @ApiOperation(value = "测试Lua脚本")
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
@@ -135,4 +135,7 @@ public class TestController {
     public ViewCardUserHit demo4(){
         return new ViewCardUserHit();
     }
+
+
+
 }

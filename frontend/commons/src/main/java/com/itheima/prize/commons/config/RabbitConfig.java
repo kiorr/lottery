@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
     private static Logger log = LoggerFactory.getLogger(RabbitConfig.class);
+
     @Autowired
     private CachingConnectionFactory connectionFactory;
 

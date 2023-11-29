@@ -51,7 +51,7 @@ import freemarker.template.TemplateModelException;
 public class ZcurdConfig extends JFinalConfig {
 	private AccountConfig accountConfig = new AccountConfig();
 	private static Constants jfinalConstants;
-	
+
 	/**
 	 * 配置常量
 	 */
@@ -63,7 +63,7 @@ public class ZcurdConfig extends JFinalConfig {
 		me.setViewType(ViewType.FREE_MARKER);
 		jfinalConstants = me;
 	}
-	
+
 	/**
 	 * 配置路由
 	 */
@@ -80,7 +80,7 @@ public class ZcurdConfig extends JFinalConfig {
 		me.add("/gamehistory", CardGameController.class,"/busi/cardGame");
 
 	}
-	
+
 	/**
 	 * 配置插件
 	 */
@@ -90,7 +90,7 @@ public class ZcurdConfig extends JFinalConfig {
 		DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("base_jdbcUrl"), PropKit.get("base_user"), PropKit.get("base_password").trim());
 		druidPlugin.set(2,1,5);
 		me.add(druidPlugin);
-		
+
 		// 配置ActiveRecord插件
 		ActiveRecordPlugin arp = new ActiveRecordPlugin("zcurd_base", druidPlugin);
 		arp.setShowSql(true);
@@ -106,7 +106,7 @@ public class ZcurdConfig extends JFinalConfig {
 		arp.addMapping("task_log", "id", TaskLog.class);
 		arp.addMapping("sys_login_log", "id", SysLoginLog.class);
 		_MappingKit.mapping(arp);
-		
+
 		//业务数据库
 		DruidPlugin druidPluginAir = new DruidPlugin(PropKit.get("busi_jdbcUrl"), PropKit.get("busi_user"), PropKit.get("busi_password").trim());
 		me.add(druidPluginAir);
@@ -120,7 +120,7 @@ public class ZcurdConfig extends JFinalConfig {
 
 		me.add(arpAir);
 	}
-	
+
 	/**
 	 * 配置全局拦截器
 	 */
@@ -128,16 +128,16 @@ public class ZcurdConfig extends JFinalConfig {
 		accountConfig.configInterceptor(me);
 		me.add(new ErrorInterceptor());
 	}
-	
+
 	/**
 	 * 配置处理器
 	 */
 	public void configHandler(Handlers me) {
 		accountConfig.configHandler(me);
 		me.add(new ZcurdHandler());
-		
+
 	}
-	
+
 	@Override
 	public void afterJFinalStart() {
 		accountConfig.afterJFinalStart();
@@ -146,13 +146,14 @@ public class ZcurdConfig extends JFinalConfig {
 		} catch (TemplateModelException e) {
 			e.printStackTrace();
 		}
-		
+
 		//定时任务
 		TaskService taskService = Duang.duang(TaskService.class);
 		taskService.startAll();
 	}
-	
+
 	/**
+	 * todo：
 	 * 建议使用 JFinal 手册推荐的方式启动项目
 	 * 运行此 main 方法可以启动项目，此main方法可以放置在任意的Class类定义中，不一定要放于此
 	 */
@@ -164,7 +165,7 @@ public class ZcurdConfig extends JFinalConfig {
 	public void configEngine(Engine me) {
 		accountConfig.configEngine(me);
 	}
-	
+
 	public static boolean getDevModel() {
 		return jfinalConstants.getDevMode();
 	}

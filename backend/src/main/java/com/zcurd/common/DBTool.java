@@ -14,20 +14,20 @@ import com.zcurd.online.vo.QueryParamVO;
 
 public class DBTool{
 	public static final DBTool me = new DBTool();
-	
-	
+
+
 	public static List<Record> findByMultProperties(String table, String[] properties, Object[] values) {
 		return findByMultProperties(table, properties, values, null, null);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, Object[] values, String orderBy) {
 		return findByMultProperties(table, properties, values, orderBy, null);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, Object[] values, Pager pager) {
 		return findByMultProperties(table, properties, values, null, pager);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, Object[] values, String orderBy, Pager pager) {
 		String[] symbols = new String[properties.length];
 		for (int i = 0; i < properties.length; i++) {
@@ -35,65 +35,65 @@ public class DBTool{
 		}
 		return findByMultProperties(null, table, properties, symbols, values, orderBy, pager);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, String[] symbols, Object[] values) {
 		return findByMultProperties(null, table, properties, symbols, values, null, null);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, String[] symbols, Object[] values, Pager pager) {
 		return findByMultProperties(null, table, properties, symbols, values, null, pager);
 	}
-	
+
 	public static List<Record> findByMultProperties(String table, String[] properties, String[] symbols, Object[] values, String orderBy, Pager pager) {
 		return findByMultProperties(null, table, properties, symbols, values, orderBy, pager);
 	}
-	
+
 	public static List<Record> findByMultProperties(String[] fields, String table, String[] properties, Object[] values) {
 		return findByMultProperties(fields, table, properties, null, values, null, null);
 	}
-	
+
 	public static List<Record> findByMultProperties(String[] fields, String table, String[] properties, String[] symbols, Object[] values) {
 		return findByMultProperties(fields, table, properties, symbols, values, null, null);
 	}
-	
+
 	public static List<Record> findByMultProperties(String[] fields, String table, String[] properties, String[] symbols, Object[] values, Pager pager) {
 		return findByMultProperties(fields, table, properties, symbols, values, null, pager);
 	}
-	
+
 	public static List<Record> findByMultProperties(String[] fields, String table, String[] properties, String[] symbols, Object[] values, String orderBy, Pager pager) {
 		return findByMultPropertiesDbSource(null, fields, table, properties, symbols, values, orderBy, pager);
 	}
-	
-	
-	
+
+
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values) {
 		return findByMultPropertiesDbSource(dbSource, null, table, properties, symbols, values, null, null);
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values, Pager pager) {
 		return findByMultPropertiesDbSource(dbSource, null, table, properties, symbols, values, null, pager);
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values, String orderBy, Pager pager) {
 		return findByMultPropertiesDbSource(dbSource, null, table, properties, symbols, values, orderBy, pager);
 	}
-	
+
 	public static List<Record> findList(QueryParamVO vo) {
 		return findByMultPropertiesDbSource(vo.getDbSource(), null, vo.getTable(), vo.getPropertiesToArray(), vo.getSymbolsToArray(), vo.getValuesToArray(), vo.getWhereSql(), vo.getOrderBy(), vo.getPager());
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values, String whereSql, String orderBy, Pager pager) {
 		return findByMultPropertiesDbSource(dbSource, null, table, properties, symbols, values, whereSql, orderBy, pager);
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String table, QueryParamVO vo) {
 		return findByMultPropertiesDbSource(dbSource, null, table, vo.getPropertiesToArray(), vo.getSymbolsToArray(), vo.getValuesToArray(), vo.getWhereSql(), null, null);
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String[] fields, String table, String[] properties, String[] symbols, Object[] values, String orderBy, Pager pager) {
 		return findByMultPropertiesDbSource(dbSource, fields, table, properties, symbols, values, null, orderBy, pager);
 	}
-	
+
 	public static List<Record> findByMultPropertiesDbSource(String dbSource, String[] fields, String table, String[] properties, String[] symbols, Object[] values, String whereSql, String orderBy, Pager pager) {
 		checkSecurity(properties, symbols);
 		StringBuilder sb = new StringBuilder("select ");
@@ -107,9 +107,9 @@ public class DBTool{
 			}
 			sb.append(fields[i]);
 		}
-		
+
 		sb.append(" from " + table + " where 1=1");
-		
+
 		for (int i = 0; i < properties.length; i++) {
 			//多选搜索，用or代替in，防止SQL注入
 			if(ZcurdConst.SEARCH_TYPE_OR2IN.equals(symbols[i]) && values[i] != null && values[i].toString().indexOf(",") != -1) {
@@ -127,11 +127,11 @@ public class DBTool{
 				params.add(values[i]);
 			}
 		}
-		
+
 		if(StringUtil.isNotEmpty(whereSql)) {
 			sb.append(" and " + whereSql);
 		}
-		
+
 		if(StringUtil.isNotEmpty(orderBy)) {
 			sb.append(" order by " + orderBy);
 		}
@@ -140,7 +140,7 @@ public class DBTool{
 		}
 		return Db.use(ZcurdTool.getDbSource(dbSource)).find(sb.toString(), params.toArray());
 	}
-	
+
 	public static int countByMultProperties(String table, String[] properties, Object[] values) {
 		String[] symbols = new String[properties.length];
 		for (int i = 0; i < properties.length; i++) {
@@ -148,19 +148,19 @@ public class DBTool{
 		}
 		return countByMultProperties(table, properties, symbols, values);
 	}
-	
+
 	public static int countByMultProperties(String table, String[] properties, String[] symbols, Object[] values) {
 		return countByMultPropertiesDbSource(null, table, properties, symbols, values);
 	}
-	
+
 	public static int countByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values) {
 		return countByMultPropertiesDbSource(dbSource, table, properties, symbols, values, null);
 	}
-	
+
 	public static int countBy(QueryParamVO vo) {
 		return countByMultPropertiesDbSource(vo.getDbSource(), vo.getTable(), vo.getPropertiesToArray(), vo.getSymbolsToArray(), vo.getValuesToArray(), vo.getWhereSql());
 	}
-	
+
 	public static int countByMultPropertiesDbSource(String dbSource, String table, String[] properties, String[] symbols, Object[] values, String whereSql) {
 		checkSecurity(properties, symbols);
 		StringBuilder sb = new StringBuilder("select count(*)");
@@ -188,7 +188,7 @@ public class DBTool{
 		}
 		return Db.use(ZcurdTool.getDbSource(dbSource)).queryLong(sb.toString(), params.toArray()).intValue();
 	}
-	
+
 	public static List<Object> findDbSource(String dbSource, String selectSQL, String[] properties, String[] symbols, Object[] values, String whereSql) {
 		checkSecurity(properties, symbols);
 		StringBuilder sb = new StringBuilder(selectSQL);
@@ -214,15 +214,15 @@ public class DBTool{
 				params.add(values[i]);
 			}
 		}
-		
+
 		if(StringUtil.isNotEmpty(whereSql)) {
 			sb.append(" and " + whereSql);
 		}
-		
+
 		List<Object> result = Db.use(ZcurdTool.getDbSource(dbSource)).query(sb.toString(), params.toArray());
 		return result;
 	}
-	
+
 	/**
 	 * 解析dbSource和sql，格式为[dbSource=xxx]select ...
 	 * @param sql
@@ -236,7 +236,7 @@ public class DBTool{
 		}
 		return new String[]{dbSource, sql};
 	}
-	
+
 	/**
 	 * 支持带数据源的查询
 	 * @param sql 格式为[dbSource=xxx]select ...
@@ -245,11 +245,11 @@ public class DBTool{
 		String[] parseSql = parseSQL4DbSource(sql);
 		return use(parseSql[0]).find(parseSql[1]);
 	}
-	
+
 	public static DbPro use(String dbSource) {
 		return Db.use(ZcurdTool.getDbSource(dbSource));
 	}
-	
+
 	/**
 	 * 判断是否安全的查询条件
 	 * @return true: 安全, false: 不安全
@@ -257,14 +257,14 @@ public class DBTool{
 	public static boolean isSecurity(String[] properties, String[] symbols) {
 		return isSecurity(properties, symbols, false);
 	}
-	
+
 	/**
 	 * 判断是否安全的查询条件。如不安全，抛出运行时异常
 	 */
 	public static boolean checkSecurity(String[] properties, String[] symbols) {
 		return isSecurity(properties, symbols, true);
 	}
-	
+
 	/**
 	 * 判断是否安全的查询条件
 	 * @param isThrowException	是否抛出异常 (true: 抛出异常, false: 不抛出异常)
@@ -288,7 +288,7 @@ public class DBTool{
 				}
 			}
 		}
-		
+
 		if(properties != null) {
 			if(1==1) return false;
 			String[] danger4Symbols = new String[]{" ", "'"};
@@ -307,25 +307,25 @@ public class DBTool{
 				}
 			}
 		}
-		
+
 		return true;
 	}
-	
+	// todo: 这里有一个配置sql url 的地方
 	public static void main(String[] args) {
-		C3p0Plugin c3p0Plugin = new C3p0Plugin("jdbc:mysql://127.0.0.1/zcurd?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "123456");
-		ActiveRecordPlugin arp = new ActiveRecordPlugin("zcurd", c3p0Plugin); 
+		C3p0Plugin c3p0Plugin = new C3p0Plugin("jdbc:mysql://localhost:3306/zcurd?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull", "root", "993284");
+		ActiveRecordPlugin arp = new ActiveRecordPlugin("zcurd", c3p0Plugin);
 		c3p0Plugin.start();
 		arp.start();
-		
+
 		List<Record> list = findByMultProperties("sys_menu" , new String[]{"parent_id"}, new Object[]{0});
 		for (Record record : list) {
 			System.out.println(record);
 		}
 		System.out.println(countByMultProperties("sys_menu" , new String[]{"parent_id"}, new Object[]{0}));
-		
+
 		/*List<Object> list = findDbSource(null, "select sum(id), avg(id) from sys_menu", new String[]{"id"}, new String[]{"<"}, new Object[]{5});
 		System.out.println(list);*/
-		
+
 		System.out.println(isSecurity(new String[]{"name>1"}, new String[]{}));
 	}
 
