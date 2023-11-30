@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.alibaba.fastjson.JSON;
 import com.itheima.prize.api.service.LoginService;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
@@ -56,7 +57,7 @@ public class LoginController {
             HttpSession session = request.getSession(true);
             session.setAttribute("user",login);
             // 存入到 redis
-            redisUtil.set(RedisKeys.SESSION+login.getId(),session);
+            redisUtil.set(RedisKeys.SESSION+login.getId(), JSON.toJSONString(session));
             login.setPasswd(null);
             login.setIdcard(null);
             return new ApiResult(1,"登录成功",login);
@@ -71,6 +72,12 @@ public class LoginController {
         return new ApiResult(0,"密码错误5次，请5分钟后再登录",null);
     }
 
+    /**
+     * 注销
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/logout")
     @ApiOperation(value = "退出")
     public ApiResult logout(HttpServletRequest request){

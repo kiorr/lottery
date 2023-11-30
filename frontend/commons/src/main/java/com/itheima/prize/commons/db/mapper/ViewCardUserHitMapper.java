@@ -3,6 +3,8 @@ package com.itheima.prize.commons.db.mapper;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import java.util.List;
+
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectKey;
@@ -78,4 +80,11 @@ public interface ViewCardUserHitMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") ViewCardUserHit record, @Param("example") ViewCardUserHitExample example);
+
+    /**
+     * 联表查询
+     * @param userid
+     * @return
+     */
+    List<ViewCardUserHit> selectAll(@Param("userid") Integer userid,@Param("gameid") Integer gameid);
 }
