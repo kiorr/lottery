@@ -23,4 +23,7 @@ public class RedisKeys {
     public final static String USERLOGINTIMES="user_login_times_";
     //用户是否参与过该活动
     public static final String USERGAME = "user_game_";
+
+    // 用户 session
+    public static final String SESSION = "user";
 }
