@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 @ApiModel("分页信息")
-public class PageBean<T> {
+public class  PageBean<T> {
     @ApiModelProperty(value = "当前页，1开始")
     private Integer currentPage = 1;
     @ApiModelProperty(value = "每页条数，默认10")

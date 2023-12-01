@@ -1,7 +1,8 @@
 package com.itheima.prize.commons.db.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-
+@Mapper
 public interface CardUserGamesMapper {
 
     /**

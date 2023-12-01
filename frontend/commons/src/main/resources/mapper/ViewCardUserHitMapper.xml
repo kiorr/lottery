@@ -225,6 +225,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="page" resultType="com.itheima.prize.commons.db.entity.ViewCardUserHit">
+    select * from view_card_user_hit
+    <where>
+      <if test="gameid != -1">
+        gameid = #{gameid}
+      </if>
+    </where>
+  </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     <!--
       WARNING - @mbg.generated
