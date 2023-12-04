@@ -134,4 +134,8 @@ public interface CardUserMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardUser record);
+    @Select("select  * from prize.card_user where uname=#{uname} && passwd =#{passwd}")
+    CardUser selectUserByName(@Param("uname") String uname,@Param("passwd") String passwd);
+
+
 }

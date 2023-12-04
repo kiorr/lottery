@@ -30,7 +30,7 @@ public class PasswordUtil {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(encodePassword("123456"));
+		System.out.println(encodePassword("bxg123"));
 	}
 
 }

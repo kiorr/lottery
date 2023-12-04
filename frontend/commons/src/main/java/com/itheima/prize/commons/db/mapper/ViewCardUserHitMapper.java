@@ -1,10 +1,12 @@
 package com.itheima.prize.commons.db.mapper;
 
+import com.github.pagehelper.Page;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 
 public interface ViewCardUserHitMapper {
@@ -78,4 +80,6 @@ public interface ViewCardUserHitMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") ViewCardUserHit record, @Param("example") ViewCardUserHitExample example);
+@Select("select * from prize.view_card_user_hit where userid=#{userId} and gameid=#{gameid}")
+    Page<ViewCardUserHit> selectPageList(Page<ViewCardUserHit> page, int gameid, @Param("userId") Integer userId);
 }

@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.github.pagehelper.Page;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.entity.CardUserDto;
@@ -15,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,10 +36,25 @@ public class UserController {
     @Autowired
     private CardUserGamesMapper cardUserGamesMapper;
 
+    /**
+     * 从session中获取用户对象
+     * @param request
+     * @return 返回用户的dto对象
+     */
     @GetMapping("/info")
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
-        return null;
+        CardUser user =(CardUser) request.getSession().getAttribute("user");
+        CardUserDto userDto = new CardUserDto();
+        //属性拷贝
+        BeanUtils.copyProperties(user,userDto);
+        //将密码设置为 null
+        userDto.setPasswd(null);
+        userDto.setIdcard(null);
+        //查找游戏对象
+        userDto.setGames(cardUserGamesMapper.getGamesNumByUserId(userDto.getId()));
+        userDto.setProducts(cardUserGamesMapper.getPrizesNumByUserId(userDto.getId()));
+        return new ApiResult(1,"成功",userDto);
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -48,7 +65,12 @@ public class UserController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
-        return null;
+        CardUser user =(CardUser) request.getSession().getAttribute("user");
+        if (user==null)
+            return new ApiResult(0,"登录超时",null);
+        Page<ViewCardUserHit> page = PageHelper.offsetPage(curpage, limit, "hittime desc");
+        Page<ViewCardUserHit> pageResult=hitMapper.selectPageList(page,gameid,user.getId());
+        return new ApiResult(1,"成功", new PageBean<>(curpage, limit, pageResult.getTotal(), pageResult.getResult()));
     }
 
 
