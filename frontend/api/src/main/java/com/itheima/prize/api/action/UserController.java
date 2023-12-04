@@ -69,7 +69,6 @@ public class UserController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
-        //todo:中奖信息
         HttpSession session = request.getSession(false);
         if(ObjectUtils.isEmpty(session)) {
             return new ApiResult<>(-1,"登录超时",null);
