@@ -1,6 +1,8 @@
 package com.itheima.prize.api.action;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.mapper.GameLoadMapper;
@@ -39,7 +41,10 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+       List<CardGame> cardGames = gameMapper.selectAllGame(status);
+        Page<CardGame> page = PageHelper.startPage(curpage,limit);
+        PageInfo<CardGame> gamePageInfo = new PageInfo<>(cardGames);
+        return new ApiResult<>(1,"成功",new PageBean<>(curpage,limit,gamePageInfo.getTotal(),gamePageInfo.getList()));
     }
 
     @GetMapping("/info/{gameid}")
@@ -48,7 +53,10 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return null;
+
+        CardGame cardGame = gameMapper.selectByPrimaryKey(gameid);
+
+        return new ApiResult<>(1,"成功",cardGame);
     }
 
     @GetMapping("/products/{gameid}")
@@ -57,7 +65,9 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return null;
+
+        List<CardProductDto> cardProductDtos = gameMapper.selectProductByGameid(gameid);
+        return new ApiResult<>(1,"成功",cardProductDtos);
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -68,7 +78,14 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+
+        // 查询符合条件的数据
+        List<ViewCardUserHit> viewCardUserHits = hitMapper.selectAllByGameid(gameid);
+        // 进行分页
+        Page<ViewCardUserHit> viewCardUserHitPage = PageHelper.startPage(curpage,limit);
+        PageInfo<ViewCardUserHit> pageInfo = new PageInfo<>(viewCardUserHits);
+
+        return new ApiResult<>(1,"成功",new PageBean<>(curpage,limit,pageInfo.getTotal(),pageInfo.getList()));
     }
 
 

@@ -86,5 +86,7 @@ public interface ViewCardUserHitMapper {
      * @param userid
      * @return
      */
-    List<ViewCardUserHit> selectAll(@Param("userid") Integer userid,@Param("gameid") Integer gameid);
+    List<ViewCardUserHit> selectAllByUseid(@Param("userid") Integer userid,@Param("gameid") Integer gameid);
+
+    List<ViewCardUserHit> selectAllByGameid(@Param("gameid") Integer gameid);
 }

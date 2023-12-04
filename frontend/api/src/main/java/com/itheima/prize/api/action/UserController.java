@@ -75,7 +75,7 @@ public class UserController {
         }
         CardUser user = (CardUser) session.getAttribute("user");
         Page<ViewCardUserHit> page = PageHelper.startPage(curpage,limit);
-        List<ViewCardUserHit> viewCardUserHits = hitMapper.selectAll(user.getId(), gameid);
+        List<ViewCardUserHit> viewCardUserHits = hitMapper.selectAllByUseid(user.getId(), gameid);
         PageInfo<ViewCardUserHit> pageInfo =new PageInfo<>(viewCardUserHits);
         return new ApiResult<>(1,"成功",new PageBean<>(curpage,limit,pageInfo.getTotal(),pageInfo.getList()));
     }

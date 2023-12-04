@@ -267,4 +267,21 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectAllGame"  resultType="com.itheima.prize.commons.db.entity.CardGame">
+      SELECT *
+      FROM card_game
+      <if test="status!=-1">
+        WHERE `status`=#{status}
+      </if>
+      ORDER BY starttime DESC
+  </select>
+
+  <select id="selectProductByGameid"  resultType="com.itheima.prize.commons.db.entity.CardProductDto">
+        SELECT cgp.id,cp.`name`,cp.pic,cp.info,cp.price,cgp.amount
+        FROM card_game cg
+        LEFT JOIN card_game_product cgp ON cg.id=cgp.gameid
+        LEFT JOIN card_product cp ON cp.id=cgp.productid
+        WHERE cg.id=${gameid}
+    </select>
 </mapper>
