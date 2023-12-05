@@ -22,6 +22,5 @@ public class PrizeHitReceiver {
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user hit : message={}", message);
-        hitMapper.insert(JSON.parseObject(message, CardUserHit.class));
     }
 }
