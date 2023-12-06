@@ -4,6 +4,7 @@ package com.itheima.prize.commons.utils;
  * 分页bean
  */
 
+import com.itheima.prize.commons.db.entity.CardGame;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

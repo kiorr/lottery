@@ -7,7 +7,7 @@ import java.security.MessageDigest;
  * 密码工具类
  */
 public class PasswordUtil {
-	
+
 
 	private String md5(String inputStr) {
 		BigInteger bigInteger = null;
@@ -28,7 +28,7 @@ public class PasswordUtil {
 	public static String encodePassword(String password) {
 		return new PasswordUtil().md5(password);
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println(encodePassword("123456"));
 	}

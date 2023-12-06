@@ -2,6 +2,7 @@ package com.itheima.prize.api.action;
 
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
+import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.CardUserExample;
 import com.itheima.prize.commons.db.mapper.CardUserMapper;
 import com.itheima.prize.commons.utils.ApiResult;
@@ -11,11 +12,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,13 +43,48 @@ public class LoginController {
             @ApiImplicitParam(name="password",value = "密码",required = true)
     })
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
-        return null;
+        ApiResult result = new ApiResult<>();
+        String encodePassword = PasswordUtil.encodePassword(password);
+        CardUser user=userMapper.selectByName(account);
+        if(redisUtil.get(account)==null){
+            redisUtil.set(account, 5);
+        }
+        Integer total2 = (Integer)redisUtil.get(account);
+        System.out.println("---------------");
+        System.out.println(total2);
+        if(!(user.getPasswd().equals(encodePassword))){
+            Integer total = (Integer)redisUtil.get(account);
+            total--;
+            redisUtil.set(account, total);
+            if(total==0){
+                result.setCode(0);
+                result.setMsg("密码错误五次，请五分钟后再登录");
+                result.setData("null");
+                result.setNow(new Date());
+                return result;
+            }else{
+                result.setCode(0);
+                result.setMsg("账户名或密码错误");
+                result.setData("null");
+                result.setNow(new Date());
+            }
+        }
+        if(user.getUname().equals(account)&&user.getPasswd().equals(encodePassword)){
+            result.setCode(1);
+            result.setMsg("登录成功");
+            result.setData(user);
+            result.setNow(new Date());
+            request.getSession().setAttribute("user",user);
+        }
+        return result;
     }
 
     @GetMapping("/logout")
     @ApiOperation(value = "退出")
     public ApiResult logout(HttpServletRequest request){
-        return null;
+        request.getSession().setAttribute("user", null);
+        ApiResult result=new ApiResult(1, "成功",null,new Date());
+        return result;
     }
 
 }

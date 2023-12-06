@@ -491,4 +491,5 @@ public class ViewCardUserHit implements Serializable {
     public void setHittime(Date hittime) {
         this.hittime = hittime;
     }
+
 }

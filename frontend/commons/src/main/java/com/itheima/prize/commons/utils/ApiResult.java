@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @ApiModel("响应报文")
@@ -19,6 +20,9 @@ public class ApiResult<T> {
     @DateTimeFormat(pattern="yyyy/MM/dd hh:mm:ss")
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date now = new Date();
+    public ApiResult(){
+
+    }
 
     public ApiResult(int code, String msg, T data) {
         this.code = code;
@@ -26,6 +30,12 @@ public class ApiResult<T> {
         this.data = data;
     }
 
+    public ApiResult(int code, String msg, T data,Date now) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+        this.now=now;
+    }
     public int getCode() {
         return code;
     }
@@ -57,4 +67,6 @@ public class ApiResult<T> {
     public void setNow(Date now) {
         this.now = now;
     }
+
+
 }

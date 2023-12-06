@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
@@ -39,7 +40,15 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+        Page<Object> page = PageHelper.startPage(curpage, limit);
+        CardGameExample example = new CardGameExample();
+        if(status != -1){
+            example.createCriteria().andStatusEqualTo(status);
+        }
+        List<CardGame> cardGames = gameMapper.selectByExample(example);
+        long total = page.getTotal();
+        PageBean<CardGame> pageBean = new PageBean<>(curpage, limit, total, cardGames);
+        return new ApiResult(1,"成功", pageBean);
     }
 
     @GetMapping("/info/{gameid}")
@@ -48,7 +57,9 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return null;
+        CardGame list =gameMapper.selectByPrimaryKey(gameid);
+        ApiResult<CardGame> result = new ApiResult<>(1, "成功", list);
+        return result;
     }
 
     @GetMapping("/products/{gameid}")
@@ -57,7 +68,10 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return null;
+        List<CardProductDto> list =loadMapper.getByGameId(gameid);
+        ApiResult<List<CardProductDto>> result=new ApiResult<List<CardProductDto>>(1, "成功", list);
+        result.setNow(new Date());
+        return result;
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -68,7 +82,13 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+        PageHelper.startPage(curpage,limit);
+        Page<ViewCardUserHit> page=hitMapper.Page(gameid);
+        long total = page.getTotal();
+        ApiResult<PageBean<ViewCardUserHit>> result =new ApiResult<PageBean<ViewCardUserHit>>(1,"成功",
+                new PageBean<ViewCardUserHit>(curpage,limit,total,page));
+        result.setNow(new Date());
+        return result;
     }
 
 

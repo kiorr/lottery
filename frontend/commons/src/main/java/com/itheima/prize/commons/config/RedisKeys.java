@@ -18,7 +18,6 @@ public class RedisKeys {
     public final static String USERHIT="user_hit_";
     //用户参与次数
     public final static String USERENTER="user_enter_";
-
     //用户登录错误次数
     public final static String USERLOGINTIMES="user_login_times_";
     //用户是否参与过该活动
