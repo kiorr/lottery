@@ -60,7 +60,7 @@ public class GameTask {
             long end = game.getEndtime().getTime();
             //计算活动结束时间到现在还有多少秒，作为redis key过期时间
             long expire = (end - now.getTime())/1000;
-//            long expire = -1; //永不过期
+            //long expire = -1; //永不过期
             //活动持续时间（ms）
             long duration = end - start;
 
@@ -88,7 +88,7 @@ public class GameTask {
                 for (int i = 0; i < cgp.getAmount(); i++) {
                     long rnd = start + new Random().nextInt((int)duration);
                     //为什么乘1000，再额外加一个随机数呢？ - 防止时间段奖品多时重复
-                    //记得取令牌判断时间时，除以1000，还原真正的时间戳
+                    //取令牌判断时间时，除以1000，还原真正的时间戳
                     long token = rnd * 1000 + new Random().nextInt(999);
                     //将令牌放入令牌桶
                     tokenList.add(token);
@@ -121,7 +121,6 @@ public class GameTask {
             redisUtil.expire(RedisKeys.MAXGOAL +game.getId(),expire);
             redisUtil.expire(RedisKeys.MAXENTER +game.getId(),expire);
             redisUtil.expire(RedisKeys.RANDOMRATE +game.getId(),expire);
-
 
             //活动状态变更为已预热，禁止管理后台再随便变动
             game.setStatus(1);

@@ -1,5 +1,6 @@
 package com.itheima.prize.commons.db.mapper;
 
+import com.github.pagehelper.Page;
 import com.itheima.prize.commons.db.entity.CardGame;
 import com.itheima.prize.commons.db.entity.CardGameExample;
 import java.util.List;
@@ -127,4 +128,6 @@ public interface CardGameMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardGame record);
+
+/*    Page<CardGame> pageQuery(int status);*/
 }

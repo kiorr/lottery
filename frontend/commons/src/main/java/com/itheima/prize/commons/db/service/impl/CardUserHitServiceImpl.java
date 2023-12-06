@@ -39,12 +39,24 @@ public class CardUserHitServiceImpl implements CardUserHitService {
         List<ViewCardUserHit> viewCardUserHits = viewCardUserHitMapper.selectByExample(example);
         return new PageBean<ViewCardUserHit>(curpage, limit, (long) viewCardUserHits.size(), viewCardUserHits);*/
 
+        //开启查询条件
         PageHelper.startPage(curpage, limit);
-
+        //分页数据
         Page<ViewCardUserHit> page = viewCardUserHitMapper.pageQuery(gameId, userId);
-
+        //取出值，去封装到PageBean
         long total = page.getTotal();
         List<ViewCardUserHit> result = page.getResult();
         return new PageBean<ViewCardUserHit>(curpage, limit, total, result);
+    }
+
+    @Override
+    public PageBean<ViewCardUserHit> page(int curpage, int limit, int gameid) {
+        Page<Object> page = PageHelper.startPage(curpage, limit);
+        ViewCardUserHitExample example = new ViewCardUserHitExample();
+        ViewCardUserHitExample.Criteria criteria = example.createCriteria(); // 创建查询条件
+        criteria.andGameidEqualTo(gameid); // 添加查询条件
+        example.setDistinct(false);
+        List<ViewCardUserHit> viewCardUserHits = viewCardUserHitMapper.selectByExample(example);
+        return new PageBean<ViewCardUserHit>(curpage, limit, page.getTotal(), viewCardUserHits);
     }
 }

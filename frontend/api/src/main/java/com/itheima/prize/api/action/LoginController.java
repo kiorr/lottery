@@ -56,11 +56,6 @@ public class LoginController {
             redisUtil.set(RedisKeys.USERLOGINTIMES + account, 5L);
         }
         ApiResult apiResult = cardUserService.login(account, password, request);
-        //4.存session
-        /*if (apiResult.getCode() == 1){
-            CardUser user = (CardUser) apiResult.getData();
-            request.getSession().setAttribute("user", user);
-        }*/
         return apiResult;
     }
 

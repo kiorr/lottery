@@ -1,6 +1,7 @@
 package com.itheima.prize.commons.db.mapper;
 
 import com.itheima.prize.commons.db.entity.CardProduct;
+import com.itheima.prize.commons.db.entity.CardProductDto;
 import com.itheima.prize.commons.db.entity.CardProductExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
@@ -125,4 +126,6 @@ public interface CardProductMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardProduct record);
+
+    List<CardProductDto> getByGameid(int gameid);
 }
