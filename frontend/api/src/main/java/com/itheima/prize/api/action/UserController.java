@@ -41,6 +41,7 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
         CardUser user = (CardUser) request.getSession().getAttribute("user");
+        //获得用户参与活动、中奖次数
         Integer games = cardUserGamesMapper.getGamesNumByUserId(user.getId());
         Integer prises = cardUserGamesMapper.getPrizesNumByUserId(user.getId());
         CardUserDto cardUserDto = new CardUserDto();
@@ -64,12 +65,11 @@ public class UserController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
-
+        //分页
         PageHelper.startPage(curpage,limit);
         Page<ViewCardUserHit> page=hitMapper.Page(gameid);
         long total = page.getTotal();
         ApiResult result=new ApiResult(1,"成功",new PageBean<ViewCardUserHit>(curpage,limit,total,page));
-
        /* Enumeration<String> attributeNames = request.getSession().getAttributeNames();
         PageHelper.startPage(curpage, limit);
         List<ViewCardUserHit> all = hitMapper.selectByExample();*/

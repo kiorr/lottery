@@ -40,11 +40,13 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
+        //分页
         Page<Object> page = PageHelper.startPage(curpage, limit);
         CardGameExample example = new CardGameExample();
         if(status != -1){
             example.createCriteria().andStatusEqualTo(status);
         }
+        //返回活动列表
         List<CardGame> cardGames = gameMapper.selectByExample(example);
         long total = page.getTotal();
         PageBean<CardGame> pageBean = new PageBean<>(curpage, limit, total, cardGames);
@@ -57,6 +59,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
+        //获得活动信息列表
         CardGame list =gameMapper.selectByPrimaryKey(gameid);
         ApiResult<CardGame> result = new ApiResult<>(1, "成功", list);
         return result;
@@ -68,6 +71,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
+        //获得奖品信息
         List<CardProductDto> list =loadMapper.getByGameId(gameid);
         ApiResult<List<CardProductDto>> result=new ApiResult<List<CardProductDto>>(1, "成功", list);
         result.setNow(new Date());
@@ -82,6 +86,7 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
+        //获得中奖列表
         PageHelper.startPage(curpage,limit);
         Page<ViewCardUserHit> page=hitMapper.Page(gameid);
         long total = page.getTotal();

@@ -77,12 +77,14 @@ public class ActController {
             ApiResult<Object> result5 = new ApiResult<>(-1,"您已达到最大抽奖次数",null,new Date());
             return result5;
         }
+        //lua对token判断，返回奖品抽的情况，原子性操作
         Long token = luaScript.tokenCheck(RedisKeys.TOKENS +gameid,String.valueOf(new Date().getTime()));
         if(token == 0){
             return new ApiResult(-1,"奖品已抽光",null);
         }else if(token == 1){
             return new ApiResult(0,"未中奖",null);
         }
+        //参与活动
         if(redisUtil.incr(RedisKeys.USERGAME + gameid + "_" +user.getId(),1) == 1){
             CardUserGame cardUserGame = new CardUserGame(user.getId(),gameid,new Date());
             rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_PLAY,JSON.toJSONString(cardUserGame));
@@ -105,7 +107,6 @@ public class ActController {
     public ApiResult info(@PathVariable int gameid){
         //将所有本活动相关的信息放在⼀个Map中集中返回
         HashMap<String, Object> gameMap = new HashMap<>();
-
         //返回list缓存token
         List<Object> tokens = redisUtil.lrange(RedisKeys.TOKENS + gameid,0,-1);
         //根据token查找缓存 token到实际奖品之间的映射关系

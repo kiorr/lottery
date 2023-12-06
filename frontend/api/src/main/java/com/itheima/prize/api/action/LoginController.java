@@ -44,14 +44,18 @@ public class LoginController {
     })
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
         ApiResult result = new ApiResult<>();
+        //加密
         String encodePassword = PasswordUtil.encodePassword(password);
         CardUser user=userMapper.selectByName(account);
+        //设置缓存登录次数5
         if(redisUtil.get(account)==null){
             redisUtil.set(account, 5);
         }
         Integer total2 = (Integer)redisUtil.get(account);
-        System.out.println("---------------");
-        System.out.println(total2);
+        /*System.out.println("---------------");
+        System.out.println(total2);*/
+        //判断密码是否正确
+        //将缓存登录次数-1，直到为0重新登陆
         if(!(user.getPasswd().equals(encodePassword))){
             Integer total = (Integer)redisUtil.get(account);
             total--;
@@ -69,6 +73,7 @@ public class LoginController {
                 result.setNow(new Date());
             }
         }
+        //密码符合，登陆成功
         if(user.getUname().equals(account)&&user.getPasswd().equals(encodePassword)){
             result.setCode(1);
             result.setMsg("登录成功");
@@ -82,6 +87,7 @@ public class LoginController {
     @GetMapping("/logout")
     @ApiOperation(value = "退出")
     public ApiResult logout(HttpServletRequest request){
+        //退出登录
         request.getSession().setAttribute("user", null);
         ApiResult result=new ApiResult(1, "成功",null,new Date());
         return result;
