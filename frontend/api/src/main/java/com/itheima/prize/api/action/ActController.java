@@ -63,18 +63,20 @@ public class ActController {
         }
         //判断用户抽奖次数
         if(redisUtil.hget(RedisKeys.MAXENTER + gameid ,user.getLevel() + "") != null
-                && redisUtil.get(RedisKeys.USERENTER + gameid + "_" + user.getId())!=null
                 && ((int)redisUtil.hget(RedisKeys.MAXENTER + gameid ,user.getLevel() + "") <
-                (int)redisUtil.get(RedisKeys.USERENTER + gameid + "_" + user.getId()))){
+                (int) redisUtil.incr(RedisKeys.USERENTER + gameid + "_" + user.getId(),  1))){
             ApiResult<Object> result4 = new ApiResult<>(-1,"您的抽奖次数已用完",null,new Date());
             return result4;
         }
+        System.out.println("--------------------------------------------");
+        System.out.println((int)redisUtil.hget(RedisKeys.MAXENTER + gameid ,user.getLevel() + ""));
+        System.out.println(redisUtil.get(RedisKeys.USERENTER + gameid + "_" + user.getId()));
         //判断用户中奖次数
         if(redisUtil.hget(RedisKeys.MAXGOAL + gameid ,user.getLevel() + "") != null
                 && redisUtil.get(RedisKeys.USERHIT + gameid + "_" + user.getId())!=null
                 && (int)redisUtil.hget(RedisKeys.MAXGOAL + gameid ,user.getLevel() + "") <
                 (int)redisUtil.get(RedisKeys.USERHIT + gameid + "_" + user.getId())){
-            ApiResult<Object> result5 = new ApiResult<>(-1,"您已达到最大抽奖次数",null,new Date());
+            ApiResult<Object> result5 = new ApiResult<>(-1,"您已达到最大中奖次数",null,new Date());
             return result5;
         }
         //lua对token判断，返回奖品抽的情况，原子性操作
