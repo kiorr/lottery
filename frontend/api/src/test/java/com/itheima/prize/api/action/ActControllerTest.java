@@ -37,8 +37,11 @@ class ActControllerTest {
     @Test
     void selectTest() throws InterruptedException {
 
-        List<CardGameRules> cardGameRules = gameRulesMapper.selectByGameid(43);
-        System.out.println(cardGameRules.toString());
-        System.out.println();
+        Date date = new Date(1701943024);
+        System.out.println(date.toString());
+        System.out.println(date.toGMTString());
+        System.out.println(date.toLocaleString());
+
+
     }
 }
