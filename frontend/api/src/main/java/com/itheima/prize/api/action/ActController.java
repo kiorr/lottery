@@ -53,31 +53,36 @@ public class ActController {
         if (game.getStarttime().compareTo(date) > 0){
             ApiResult apiResult = new ApiResult(-1, "活动未开始", null);
             apiResult.setNow(date);
+            return apiResult;
         }
         //如果结束时间比当前时间早
         if (game.getEndtime().compareTo(date) < 0){
             ApiResult apiResult = new ApiResult(-1, "活动已结束", null);
             apiResult.setNow(date);
+            return apiResult;
         }
         //判断用户是否登陆
         if (user == null){
             ApiResult apiResult = new ApiResult(-1, "未登录", null);
             apiResult.setNow(date);
+            return apiResult;
         }
         //抽奖次数判断
         if (!(!(StringUtils.isEmpty(redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString())))
-                        && ((int)redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString()) >
-                (int)redisUtil.incr(RedisKeys.USERENTER+gameid+"_"+user.getId(),1)))){
-            ApiResult apiResult = new ApiResult(0, "您的抽奖次数已用完", null);
+                        && (((int)redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString()) >
+                (int)redisUtil.incr(RedisKeys.USERENTER+gameid+"_"+user.getId(),1)) ||
+                (int)redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString()) == 0))){
+            ApiResult apiResult = new ApiResult(-1, "您的抽奖次数已用完", null);
             apiResult.setNow(date);
             return apiResult;
         }
         //中奖次数判断
         if (!((redisUtil.get(RedisKeys.USERHIT+gameid+"_"+user.getId())  == null)  ||
-                !((StringUtils.isEmpty(redisUtil.hget(RedisKeys.MAXGOAL + gameid, user.getLevel().toString())))
-                && ((int)redisUtil.hget(RedisKeys.MAXGOAL + gameid, user.getLevel().toString()) >
-                (int)redisUtil.get(RedisKeys.USERHIT + gameid + "_" + user.getId()))))){
-            ApiResult apiResult = new ApiResult(0, "您已达到最大中奖数", null);
+                (!(StringUtils.isEmpty(redisUtil.hget(RedisKeys.MAXGOAL + gameid, user.getLevel().toString())))
+                && (((int)redisUtil.hget(RedisKeys.MAXGOAL + gameid, user.getLevel().toString()) >
+                (int)redisUtil.get(RedisKeys.USERHIT + gameid + "_" + user.getId())) ||
+                (int)redisUtil.hget(RedisKeys.MAXGOAL + gameid, user.getLevel().toString()) == 0)))){
+            ApiResult apiResult = new ApiResult(-1, "您已达到最大中奖数", null);
             apiResult.setNow(date);
             return apiResult;
         }
