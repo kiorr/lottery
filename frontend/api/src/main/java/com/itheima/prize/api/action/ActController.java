@@ -53,6 +53,8 @@ public class ActController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult info(@PathVariable int gameid){
+
+
         return null;
     }
 }

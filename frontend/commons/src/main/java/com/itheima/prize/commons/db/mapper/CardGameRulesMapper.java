@@ -128,4 +128,9 @@ public interface CardGameRulesMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardGameRules record);
+
+    @Select({"SELECT *",
+            "FROM card_game_rules",
+            "WHERE gameid=${gameid}"})
+    List<CardGameRules> selectByGameid(@Param("gameid") Integer gameid);
 }

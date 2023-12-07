@@ -130,7 +130,12 @@ public interface CardGameMapper {
     })
     int updateByPrimaryKey(CardGame record);
 
+
     List<CardGame> selectAllGame(@Param("status") int status);
+
+    @Select("SELECT *" +
+            "FROM card_game")
+    List<CardGame> selectByStatus();
 
     List<CardProductDto> selectProductByGameid(@Param("gameid")  int gameid);
 }

@@ -124,4 +124,12 @@ public interface CardGameProductMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardGameProduct record);
+
+    @Select({
+            "SELECT *",
+            "FROM card_game_product",
+            "WHERE gameid=${gameid}"
+    })
+    @ResultMap("com.itheima.prize.commons.db.mapper.CardGameProductMapper.BaseResultMap")
+    List<CardGameProduct> getProductById(@Param("gameid") Integer gameid);
 }
