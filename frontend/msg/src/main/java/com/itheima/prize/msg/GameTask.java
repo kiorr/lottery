@@ -46,6 +46,7 @@ public class GameTask {
         }
         // 进行活动预热
         for (CardGame game : beginGames) {
+            log.info("活动将要开始:{},开始时间:{},结束时间:{}",game.getTitle(),game.getStarttime(),game.getEndtime());
             // 获取活动开始时间
             long starttime = game.getStarttime().getTime();
             // 获取活动结束时间

@@ -2,6 +2,7 @@ package com.itheima.prize.api.action;
 
 
 import com.alibaba.fastjson.JSON;
+import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardGame;
 import com.itheima.prize.commons.db.entity.CardGameProduct;
 import com.itheima.prize.commons.db.entity.CardGameRules;
@@ -10,6 +11,7 @@ import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.mapper.CardGameProductMapper;
 import com.itheima.prize.commons.db.mapper.CardGameRulesMapper;
 import com.itheima.prize.commons.db.mapper.GameLoadMapper;
+import com.itheima.prize.commons.utils.RedisUtil;
 import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +36,17 @@ class ActControllerTest {
 
     @Autowired
     private CardGameRulesMapper gameRulesMapper;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
     @Test
     void selectTest() throws InterruptedException {
 
-        Date date = new Date(1701943024);
-        System.out.println(date.toString());
-        System.out.println(date.toGMTString());
-        System.out.println(date.toLocaleString());
+
+
+        Integer maxCount = (Integer) redisUtil.hget(RedisKeys.MAXENTER + 46, "4");
+        System.out.println(maxCount);
 
 
     }

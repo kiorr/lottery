@@ -129,8 +129,12 @@ public interface CardGameRulesMapper {
     })
     int updateByPrimaryKey(CardGameRules record);
 
-    @Select({"SELECT *",
-            "FROM card_game_rules",
-            "WHERE gameid=${gameid}"})
+    @Select({
+            "select",
+            "id, gameid, userlevel, enter_times, goal_times, random_rate",
+            "from card_game_rules",
+            "where gameid = #{gameid,jdbcType=INTEGER}"
+    })
+    @ResultMap("com.itheima.prize.commons.db.mapper.CardGameRulesMapper.BaseResultMap")
     List<CardGameRules> selectByGameid(@Param("gameid") Integer gameid);
 }

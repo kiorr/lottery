@@ -1,6 +1,7 @@
 package com.itheima.prize.api.action;
 
 import com.itheima.prize.api.config.LuaScript;
+import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
@@ -42,14 +43,65 @@ public class ActController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<Object> act(@PathVariable int gameid, HttpServletRequest request){
+        // 获取当前的用户
         HttpSession session = request.getSession(false);
         CardUser user = (CardUser) session.getAttribute("user");
         if (Objects.isNull(user)){
             return new ApiResult(-1,"未登陆",null);
         }
 
+        // 获取当前活动信息，判断活动是否开始
+        CardGame curGame = (CardGame) redisUtil.get(RedisKeys.INFO + gameid);
+        long starttime = curGame.getStarttime().getTime();
+        Date curTime = new Date();
+        if(Objects.isNull(curGame) || curGame.getStarttime().after(new Date())) {
+            return new ApiResult<>(-1,"当前活动未开始",null);
+        }
 
-        return null;
+        // 判断 活动 是否结束
+        if (curTime.after(curGame.getEndtime())){
+            return new ApiResult(-1,"活动已结束",null);
+        }
+
+        // 判断用户是否还有抽奖机会
+        Integer count = (Integer) redisUtil.get(RedisKeys.USERENTER + gameid+ "_"+user.getId().toString());
+        if(count == null) {
+            redisUtil.set(RedisKeys.USERHIT+gameid+"_"+user.getId(),0,
+                    (curGame.getEndtime().getTime() - curTime.getTime())/1000);
+        }
+        // 获取最大抽奖数
+        Integer maxCount = (Integer) redisUtil.hget( RedisKeys.MAXGOAL + curGame.getId(), user.getLevel()+"");
+        // 可以抽无限次
+        if(Objects.isNull(maxCount) || maxCount == 0) {
+            maxCount = 0;
+        }
+        if(maxCount > 0 &&maxCount <= count) {
+            return new ApiResult(-1,"您抽奖次数用光了",null);
+        }
+
+        // 开始抽奖
+        // 增加一次抽奖数
+        redisUtil.incr(RedisKeys.USERENTER + gameid+ "_"+user.getId(),1);
+        Long token = luaScript.tokenCheck(RedisKeys.TOKENS + gameid, curTime.getTime() + "");
+        // 判断 token 奖池空有两种情况
+        // 1. 所有奖品都没到时间 2. 奖品抽完了
+        if( token == 0 ||Objects.isNull(token)) {
+            return new ApiResult(-1,"当前奖池已空",null);
+        }else if(token == 1) {
+            return new ApiResult(-1,"未中奖，不要灰心，再来一次！",null);
+        }
+        // 中奖了，处理结果
+        CardProduct product = (CardProduct) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+token);
+        // 中奖次数+1
+        redisUtil.incr(RedisKeys.USERHIT+gameid+"_"+user.getId(),1);
+        // 存入消息队列
+        Map map = new HashMap();
+        map.put("gameid",gameid);
+        map.put("userid",user.getId());
+        map.put("productid",product.getId());
+        map.put("hittime",curTime.getTime());
+        rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_HIT,map);
+        return new ApiResult(1,"恭喜中奖",product);
     }
 
     @GetMapping("/info/{gameid}")
@@ -59,14 +111,14 @@ public class ActController {
     })
     public ApiResult info(@PathVariable int gameid){
         // 最终结果
-        Map<String,Object> res = new HashMap<>();
+        Map<String,Object> res = new TreeMap<>();
         // 活动基本信息
         CardGame game = (CardGame) redisUtil.get(RedisKeys.INFO + gameid);
         res.put(RedisKeys.INFO + gameid,game);
         // 活动 token 的list
         List<Object> tokenList = redisUtil.lrange(RedisKeys.TOKENS + gameid, 0, -1);
         // 通过 list 获取到所有的奖品信息
-        Map<String,CardProductDto> productMap = new HashMap<>(); // 存放 奖品
+        Map<String,CardProductDto> productMap = new TreeMap<>(); // 存放 奖品
         for(Object token : tokenList) {
             CardProductDto cardProductDto = (CardProductDto) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+ token);
             Long times = Long.valueOf(token.toString());
