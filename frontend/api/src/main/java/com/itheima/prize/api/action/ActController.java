@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.alibaba.fastjson.JSON;
 import com.itheima.prize.api.config.LuaScript;
 import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.config.RedisKeys;
@@ -64,19 +65,29 @@ public class ActController {
         }
 
         // 判断用户是否还有抽奖机会
-        Integer count = (Integer) redisUtil.get(RedisKeys.USERENTER + gameid+ "_"+user.getId().toString());
+        Integer count = (Integer) redisUtil.get(RedisKeys.USERHIT + gameid+ "_"+user.getId());
         if(count == null) {
             redisUtil.set(RedisKeys.USERHIT+gameid+"_"+user.getId(),0,
                     (curGame.getEndtime().getTime() - curTime.getTime())/1000);
+            // 记录用户参加活动信息
         }
+
+
         // 获取最大抽奖数
-        Integer maxCount = (Integer) redisUtil.hget( RedisKeys.MAXGOAL + curGame.getId(), user.getLevel()+"");
+        Integer maxCount = (Integer) redisUtil.hget( RedisKeys.MAXENTER + curGame.getId(), user.getLevel()+"");
         // 可以抽无限次
         if(Objects.isNull(maxCount) || maxCount == 0) {
             maxCount = 0;
         }
         if(maxCount > 0 &&maxCount <= count) {
             return new ApiResult(-1,"您抽奖次数用光了",null);
+        }
+
+        // 判断最大中奖次数
+        Integer maxHit = (Integer) redisUtil.hget(RedisKeys.MAXGOAL + curGame.getId(), user.getLevel() + "");
+        Integer curHit = (Integer) redisUtil.get(RedisKeys.USERENTER);
+        if(curHit == maxHit) {
+            return new ApiResult<>(-1,"你已使用完中奖次数",null);
         }
 
         // 开始抽奖
@@ -94,13 +105,21 @@ public class ActController {
         CardProduct product = (CardProduct) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+token);
         // 中奖次数+1
         redisUtil.incr(RedisKeys.USERHIT+gameid+"_"+user.getId(),1);
+        // 中奖相当于参加活动
+        if(1 == (Integer) redisUtil.get(RedisKeys.USERHIT)) {
+            CardUserGame cardUserGame = new CardUserGame();
+            cardUserGame.setGameid(gameid);
+            cardUserGame.setUserid(user.getId());
+            cardUserGame.setCreatetime(curTime);
+            rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_PLAY, JSON.toJSONString(cardUserGame));
+        }
         // 存入消息队列
-        Map map = new HashMap();
-        map.put("gameid",gameid);
-        map.put("userid",user.getId());
-        map.put("productid",product.getId());
-        map.put("hittime",curTime.getTime());
-        rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_HIT,map);
+        CardUserHit hit = new CardUserHit();
+        hit.setHittime(curTime);
+        hit.setGameid(gameid);
+        hit.setUserid(user.getId());
+        hit.setProductid(product.getId());
+        rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_HIT, JSON.toJSONString(hit));
         return new ApiResult(1,"恭喜中奖",product);
     }
 
