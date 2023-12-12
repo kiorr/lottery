@@ -79,6 +79,8 @@ public class ActController {
             ApiResult<Object> result5 = new ApiResult<>(-1,"您已达到最大中奖次数",null,new Date());
             return result5;
         }
+        System.out.println(redisUtil.hget(RedisKeys.MAXGOAL + gameid ,user.getLevel() + ""));
+        System.out.println((int)redisUtil.get(RedisKeys.USERHIT + gameid + "_" + user.getId()));
         //lua对token判断，返回奖品抽的情况，原子性操作
         Long token = luaScript.tokenCheck(RedisKeys.TOKENS +gameid,String.valueOf(new Date().getTime()));
         if(token == 0){
