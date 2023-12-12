@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.alibaba.fastjson.JSONObject;
 import com.itheima.prize.api.config.LuaScript;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
@@ -84,11 +85,12 @@ public class TestController {
     })
     public ApiResult acttest(@PathVariable int gameid){
         Object o = redisUtil.leftPop(RedisKeys.TOKENS+gameid);
-        CardProduct product = (CardProduct) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+o);
+        //将
+        CardProduct product =  (CardProduct) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+o);
         Map map = new HashMap();
         if (o != null){
             map.put(
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(Long.valueOf(o.toString())/1000)),
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date(Long.parseLong(o.toString())/1000)),
                     product
             );
         }
@@ -128,7 +130,7 @@ public class TestController {
     @GetMapping("/demo/page")
     @ApiOperation(value = "分页结构")
     public PageBean demo3(){
-        return new PageBean<Object>();
+        return new PageBean<>();
     }
     @GetMapping("/demo/hit")
     @ApiOperation(value = "中奖信息结构")

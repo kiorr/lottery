@@ -1,7 +1,10 @@
 package com.itheima.prize.commons.db.mapper;
 
+import com.github.pagehelper.Page;
 import com.itheima.prize.commons.db.entity.CardGame;
 import com.itheima.prize.commons.db.entity.CardGameExample;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -132,4 +135,9 @@ public interface CardGameMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardGame record);
+    Page<CardGame> selectByStatus(Page<CardGame> page,@Param("status") int status);
+
+    @Select("select * from prize.card_game where starttime between #{start} and #{end}")
+    List<CardGame> getByStartTime(@Param("start") Date start ,@Param("end") Date end);
+
 }

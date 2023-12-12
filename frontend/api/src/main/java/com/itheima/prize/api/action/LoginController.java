@@ -24,7 +24,6 @@ import java.util.List;
 @RequestMapping(value = "/api")
 @Api(tags = {"登录模块"})
 public class LoginController {
-    private static final String USER_LOGIN = "LOGIN:";
     private  static  final  int LOGIN_COUNT=5;
     public static final long FORBID_TIME=300;
     @Autowired
@@ -42,8 +41,9 @@ public class LoginController {
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
             if(StringUtils.isBlank(account)||StringUtils.isBlank(password))
                 return new ApiResult(0,"账号或密码为空",null);
-            String redisKey=USER_LOGIN+account;
-            if(redisUtil.get(redisKey)!=null&&redisUtil.get(redisKey).equals(LOGIN_COUNT)){
+            String redisKey=RedisKeys.USERLOGINTIMES+account;
+        Object o = redisUtil.get(redisKey);
+        if(o!=null&&o.equals(LOGIN_COUNT)){
                 return new ApiResult(0,"密码错误5次，请5分钟后再登录",null);
             }
             //进行登录密码加密
@@ -52,8 +52,7 @@ public class LoginController {
             CardUser cardUser = userMapper.selectUserByName(account, encodedPassword);
             //登陆未通过
             if(cardUser==null){
-                redisUtil.incr(USER_LOGIN+account,1);
-                if (redisUtil.get(redisKey).equals(5)){
+                if (redisUtil.incr(RedisKeys.USERLOGINTIMES+account,1)>=5){
                     redisUtil.expire(redisKey,FORBID_TIME);
                 }
                 return new ApiResult(0,"用户名或密码不正确",null);

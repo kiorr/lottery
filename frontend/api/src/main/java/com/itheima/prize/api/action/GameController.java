@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
@@ -39,7 +40,10 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+
+        Page<CardGame> page = PageHelper.startPage(curpage, limit, "starttime DESC");
+        Page<CardGame> list=gameMapper.selectByStatus(page,status);
+        return  new ApiResult<>(1,"成功",new PageBean<>(curpage,limit,list.getTotal(),list.getResult()));
     }
 
     @GetMapping("/info/{gameid}")
@@ -48,7 +52,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return null;
+        return  new ApiResult<>(1,"成功",gameMapper.selectByPrimaryKey(gameid));
     }
 
     @GetMapping("/products/{gameid}")
@@ -57,7 +61,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return null;
+        return new ApiResult<>(1,"成功",loadMapper.getByGameId(gameid));
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -68,7 +72,9 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        return null;
+        Page<CardGame> page = PageHelper.startPage(curpage, limit, "hittime desc");
+        Page<ViewCardUserHit> list=hitMapper.selectHitList(page,gameid);
+       return new ApiResult<>(1,"成功",new PageBean<>(curpage,limit,list.getTotal(),list.getResult()));
     }
 
 

@@ -22,7 +22,7 @@ public class LuaScript{
  
     @PostConstruct
     public void init(){
-        script = new DefaultRedisScript<Long>();
+        script = new DefaultRedisScript<>();
         script.setResultType(Long.class);
         script.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/tokenCheck.lua")));
     }

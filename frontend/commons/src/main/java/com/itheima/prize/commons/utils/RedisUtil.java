@@ -1,5 +1,6 @@
 package com.itheima.prize.commons.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -86,7 +87,7 @@ public final class RedisUtil {
      * @return 值
      */
     public Object get(String key) {
-        return key == null ? null : redisTemplate.opsForValue().get(key);
+        return key == null ? null :redisTemplate.opsForValue().get(key);
     }
 
     /**

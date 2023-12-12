@@ -3,6 +3,8 @@ package com.itheima.prize.commons.db.mapper;
 import com.itheima.prize.commons.db.entity.CardGameProduct;
 import com.itheima.prize.commons.db.entity.CardGameProductExample;
 import java.util.List;
+
+import com.itheima.prize.commons.db.entity.CardProduct;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;

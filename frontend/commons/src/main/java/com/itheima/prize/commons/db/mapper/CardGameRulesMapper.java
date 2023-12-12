@@ -128,4 +128,6 @@ public interface CardGameRulesMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(CardGameRules record);
+
+    List<CardGameRules> getByGameId(Integer gameid);
 }

@@ -68,8 +68,9 @@ public class UserController {
         CardUser user =(CardUser) request.getSession().getAttribute("user");
         if (user==null)
             return new ApiResult(0,"登录超时",null);
-        Page<ViewCardUserHit> page = PageHelper.offsetPage(curpage, limit, "hittime desc");
+        Page<ViewCardUserHit> page = PageHelper.startPage(curpage,limit,"hittime DESC");
         Page<ViewCardUserHit> pageResult=hitMapper.selectPageList(page,gameid,user.getId());
+
         return new ApiResult(1,"成功", new PageBean<>(curpage, limit, pageResult.getTotal(), pageResult.getResult()));
     }
 
