@@ -103,10 +103,14 @@ public class ActController {
         Long token = luaScript.tokenCheck(RedisKeys.TOKENS+gameid,String.valueOf(new Date().getTime()));
         if(token == 0){
             redisUtil.incr(user.getUname() + gameid + "_enter",1);
-            return new ApiResult(-1,"奖品已抽光",null);
+            ApiResult result = new ApiResult(-1, "奖品已抽光", null);
+            result.setNow(new Date());
+            return result;
         }else if(token == 1){
             redisUtil.incr(user.getUname() + gameid + "_enter",1);
-            return new ApiResult(0,"未中奖",null);
+            ApiResult result = new ApiResult(0, "未中奖", null);
+            result.setNow(new Date());
+            return result;
         }
         redisUtil.incr(user.getUname()+gameid+"_goal",1);
         redisUtil.incr(user.getUname() + gameid + "_enter",1);
