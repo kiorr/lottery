@@ -23,7 +23,6 @@ public class PrizeGameReceiver {
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user play : msg={}" , message);
-        cardUserGameMapper.insert( JSON.parseObject(message,CardUserGame.class));
     }
 
 }
