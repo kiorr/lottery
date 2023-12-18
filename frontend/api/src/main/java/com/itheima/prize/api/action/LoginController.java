@@ -1,9 +1,9 @@
 package com.itheima.prize.api.action;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
-import com.itheima.prize.commons.db.entity.CardUser;
-import com.itheima.prize.commons.db.entity.CardUserExample;
-import com.itheima.prize.commons.db.mapper.CardUserMapper;
+import com.itheima.prize.commons.db.entity.*;
+import com.itheima.prize.commons.db.mapper.SysUserMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PasswordUtil;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -23,7 +23,7 @@ import java.util.List;
 @Api(tags = {"登录模块"})
 public class LoginController {
     @Autowired
-    private CardUserMapper userMapper;
+    private SysUserMapper userMapper;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -39,22 +39,32 @@ public class LoginController {
         if (errortimes != null && errortimes >= 5){
             return new ApiResult(0, "密码错误5次，请5分钟后再登录",null);
         }
-        CardUserExample userExample = new CardUserExample();
-        userExample.createCriteria().andUnameEqualTo(account).andPasswdEqualTo(PasswordUtil.encodePassword(password));
-        List<CardUser> users = userMapper.selectByExample(userExample);
+        QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("username",account);
+        List<SysUser> users = userMapper.selectList(wrapper);
         if (users != null && users.size() > 0) {
-            CardUser user = users.get(0);
+            SysUser user = users.get(0);
+            if (user.getStatus() == 2){
+                return new ApiResult(0, "账户已冻结",null);
+            }
             //信息脱敏，不要将敏感信息带入session以免其他接口不小心泄露到前台
-            user.setPasswd(null);
-            user.setIdcard(null);
-            HttpSession session = request.getSession();
-            session.setAttribute("user",user);
-            return new ApiResult(1, "登录成功",user);
+            String pwd = PasswordUtil.encrypt(account,password,user.getSalt());
+            if (pwd.equals(user.getPassword())){
+                HttpSession session = request.getSession();
+                CardUserDto dto = new CardUserDto(user);
+
+                session.setAttribute("user",dto);
+                return new ApiResult(1, "登录成功",dto);
+            }else{
+                //错误计数，5次锁定5分钟
+                redisUtil.incr(RedisKeys.USERLOGINTIMES+account,1);
+                redisUtil.expire(RedisKeys.USERLOGINTIMES+account,60 * 5);
+                return new ApiResult(0, "密码错误",null);
+            }
+
         } else {
-            //错误计数，5次锁定5分钟
-            redisUtil.incr(RedisKeys.USERLOGINTIMES+account,1);
-            redisUtil.expire(RedisKeys.USERLOGINTIMES+account,60 * 5);
-            return new ApiResult(0, "账户名或密码错误",null);
+
+            return new ApiResult(0, "账户不存在",null);
         }
     }
 

@@ -1,16 +1,14 @@
 package com.itheima.prize.api.action;
 
-import com.itheima.prize.commons.config.RedisKeys;
-import com.itheima.prize.commons.db.entity.CardUser;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
-import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import com.itheima.prize.commons.db.mapper.CardUserGamesMapper;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
-import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,13 +36,12 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        CardUser user = (CardUser) session.getAttribute("user");
-        if (user == null){
+        CardUserDto dto = (CardUserDto) session.getAttribute("user");
+        if (dto == null){
             return new ApiResult(0, "登录超时",null);
         }else {
-            CardUserDto dto = new CardUserDto(user);
-            dto.setGames(cardUserGamesMapper.getGamesNumByUserId(user.getId()));
-            dto.setProducts(cardUserGamesMapper.getPrizesNumByUserId(user.getId()));
+            dto.setGames(cardUserGamesMapper.getGamesNumByUserId(dto.getId()));
+            dto.setProducts(cardUserGamesMapper.getPrizesNumByUserId(dto.getId()));
             return new ApiResult(1, "成功",dto);
         }
     }
@@ -56,18 +53,17 @@ public class UserController {
             @ApiImplicitParam(name = "curpage",value = "第几页",defaultValue = "1",dataType = "int", example = "1"),
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
-    public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
+    public ApiResult hit(@PathVariable String gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
         HttpSession session = request.getSession();
-        CardUser user = (CardUser) session.getAttribute("user");
-        ViewCardUserHitExample example = new ViewCardUserHitExample();
-        ViewCardUserHitExample.Criteria criteria = example.createCriteria().andUseridEqualTo(user.getId());
-        if (gameid != -1){
-            criteria.andGameidEqualTo(gameid);
+        CardUserDto user = (CardUserDto) session.getAttribute("user");
+
+        QueryWrapper<ViewCardUserHit> hitQueryWrapper = new QueryWrapper<>();
+        if (gameid !=null && !"-1".equals(gameid)){
+            hitQueryWrapper.eq("gameid",gameid);
         }
-        long total = hitMapper.countByExample(example);
-        PageHelper.startPage(curpage, limit);
-        List<ViewCardUserHit> all = hitMapper.selectByExample(example);
-        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(curpage,limit,total,all));
+        Page<ViewCardUserHit> page = new Page<>(curpage,limit);
+        hitMapper.selectPage(page,hitQueryWrapper);
+        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(page));
 
     }
 

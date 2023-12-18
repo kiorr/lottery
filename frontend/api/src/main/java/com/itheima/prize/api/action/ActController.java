@@ -43,7 +43,7 @@ public class ActController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult<Object> act(@PathVariable int gameid, HttpServletRequest request){
+    public ApiResult<Object> act(@PathVariable String gameid, HttpServletRequest request){
         Date now = new Date();
         //获取活动基本信息
         CardGame game = (CardGame) redisUtil.get(RedisKeys.INFO+gameid);
@@ -59,7 +59,7 @@ public class ActController {
         }
         //获取当前用户
         HttpSession session = request.getSession();
-        CardUser user = (CardUser) session.getAttribute("user");
+        CardUserDto user = (CardUserDto) session.getAttribute("user");
         if (user == null){
             return new ApiResult(-1,"未登陆",null);
         }else{
@@ -81,12 +81,9 @@ public class ActController {
             enter = 0;
             redisUtil.set(RedisKeys.USERENTER+gameid+"_"+user.getId(),enter,(game.getEndtime().getTime() - now.getTime())/1000);
         }
-        //根据会员等级，获取本活动允许的最大抽奖次数
-        Integer maxenter = (Integer) redisUtil.hget(RedisKeys.MAXENTER+gameid,user.getLevel()+"");
-        //如果没设置，默认为0，即：不限制次数
-        maxenter = maxenter==null ? 0 : maxenter;
+
         //次数对比
-        if (maxenter > 0 && enter >= maxenter){
+        if (game.getMaxenter() > 0 && enter >= game.getMaxenter()){
             //如果达到最大次数，不允许抽奖
             return new ApiResult(-1,"您的抽奖次数已用完",null);
         }else{
@@ -100,12 +97,8 @@ public class ActController {
             count = 0;
             redisUtil.set(RedisKeys.USERHIT+gameid+"_"+user.getId(),count,(game.getEndtime().getTime() - now.getTime())/1000);
         }
-        //根据会员等级，获取本活动允许的最大中奖数
-        Integer maxcount = (Integer) redisUtil.hget(RedisKeys.MAXGOAL+gameid,user.getLevel()+"");
-        //如果没设置，默认为0，即：不限制次数
-        maxcount = maxcount==null ? 0 : maxcount;
         //次数对比
-        if (maxcount > 0 && count >= maxcount){
+        if (game.getMaxgoal() > 0 && count >= game.getMaxgoal()){
             //如果达到最大次数，不允许抽奖
             return new ApiResult(-1,"您已达到最大中奖数",null);
         }
@@ -119,7 +112,7 @@ public class ActController {
             case 1:
                 //随即类比较麻烦，按设计时序图走
 
-                //java调redis，有原子性问题！
+                //java调redis，有原子性问题！这里用Java代码来说明令牌的思路
 //                token = (Long) redisUtil.leftPop(RedisKeys.TOKENS+gameid);
 //                if (token == null){
 //                    //令牌已用光，说明奖品抽光了
@@ -159,8 +152,8 @@ public class ActController {
 
                 //幸运转盘类，先给用户随机剔除，再获取令牌，有就中，没有就说明抢光了
                 //一般这种情况会设置足够的商品，卡在随机上
-                Integer randomRate = (Integer) redisUtil.hget(RedisKeys.RANDOMRATE+gameid,user.getLevel()+"");
-                if (randomRate == null){
+                Integer randomRate = game.getMaxratio();
+                if (randomRate <= 0 || game.getMaxratio() >= 100){
                     randomRate = 100;
                 }
                 //注意这里的概率设计思路：

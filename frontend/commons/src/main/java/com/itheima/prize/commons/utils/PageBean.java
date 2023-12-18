@@ -4,6 +4,7 @@ package com.itheima.prize.commons.utils;
  * 分页bean
  */
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -28,6 +29,16 @@ public class PageBean<T> {
 
     public PageBean() {
         super();
+    }
+
+    public PageBean(Page<T> page){
+        this.currentPage = (int)page.getCurrent();
+        this.pageSize = (int) page.getSize();
+        this.totalNum = page.getTotal();
+        this.totalPage = (int) page.getPages();
+        this.startIndex = (this.currentPage-1)*this.pageSize;
+        this.isMore = page.hasNext()?1:0;
+        this.items=page.getRecords();
     }
 
     public PageBean(Integer currentPage, Integer pageSize, Long totalNum, List<T> data) {

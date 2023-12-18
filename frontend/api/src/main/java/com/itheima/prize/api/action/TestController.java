@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.smartcardio.Card;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,20 +47,18 @@ public class TestController {
     @Autowired
     private LuaScript luaScript;
 
-    @GetMapping("/test")
-    @ApiOperation(value = "测试mybatis")
-    public Object test(){
-        CardGameExample example = new CardGameExample();
-        //查询条件
-        example.createCriteria().andEndtimeGreaterThan(new Date());
-        //列表查询
-        List<CardGame> list = cardGameMapper.selectByExample(example);
-        return list;
+    @GetMapping("/mybatis-plus-insert")
+    @ApiOperation(value = "测试MybatisPlus插入")
+    public ApiResult inserttest(){
+        CardGame game = new CardGame();
+        game.setTitle("测试活动");
+        game.setStarttime(new Date());
+        game.setEndtime(new Date());
+        int i = cardGameMapper.insert(game);
+        return new ApiResult(200,"ok",i);
     }
 
-
-
-        @GetMapping("/luatest/{gameid}")
+    @GetMapping("/luatest/{gameid}")
     @ApiOperation(value = "测试Lua脚本")
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
@@ -101,17 +101,17 @@ public class TestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult reset(@PathVariable int gameid){
-        CardGame game = cardGameMapper.selectByPrimaryKey(gameid);
+    public ApiResult reset(@PathVariable String gameid){
+        CardGame game = cardGameMapper.selectById(gameid);
         game.setStatus(0);
         game.setStarttime(DateUtils.addMinutes(new Date(),2));
-        game.setEndtime(DateUtils.addMinutes(new Date(),4));
-        cardGameMapper.updateByPrimaryKey(game);
+        game.setEndtime(DateUtils.addMinutes(new Date(),30));
+        cardGameMapper.updateById(game);
 
-        CardUserHitExample example = new CardUserHitExample();
-        example.createCriteria().andGameidEqualTo(gameid);
+        Map<String,Object> map = new HashedMap(){{put("gameid",gameid);}};
 
-        hitMapper.deleteByExample(example);
+        hitMapper.deleteByMap(map);
+        redisUtil.del(RedisKeys.TOKENS+gameid);
         return new ApiResult(200,"修改成功",game);
     }
 

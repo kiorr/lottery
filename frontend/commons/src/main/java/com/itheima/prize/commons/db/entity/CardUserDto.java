@@ -1,15 +1,13 @@
 package com.itheima.prize.commons.db.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class CardUser implements Serializable {
+public class CardUserDto implements Serializable {
 
     //参与的活动数，中奖数
     private Integer games,products;
-    public CardUser(SysUser user) {
+    public CardUserDto(SysUser user) {
         this.setId(user.getId());
         this.setUname(user.getUsername());
         this.setPic(user.getAvatar());//头像

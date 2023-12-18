@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.prize.commons.db.mapper.CardGameMapper">
+
+    <resultMap id="BaseResultMap" type="com.itheima.prize.commons.db.entity.CardGame">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="pic" column="pic" jdbcType="VARCHAR"/>
+            <result property="info" column="info" jdbcType="VARCHAR"/>
+            <result property="starttime" column="starttime" jdbcType="TIMESTAMP"/>
+            <result property="endtime" column="endtime" jdbcType="TIMESTAMP"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="maxenter" column="maxenter" jdbcType="INTEGER"/>
+            <result property="maxratio" column="maxratio" jdbcType="INTEGER"/>
+            <result property="maxgoal" column="maxgoal" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,pic,
+        info,starttime,endtime,
+        type,status,maxenter,
+        maxratio,maxgoal
+    </sql>
+</mapper>

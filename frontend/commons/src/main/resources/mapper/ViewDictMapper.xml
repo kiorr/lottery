@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.prize.commons.db.mapper.ViewDictMapper">
+
+    <resultMap id="BaseResultMap" type="com.itheima.prize.commons.db.entity.ViewDict">
+            <result property="dictName" column="dict_name" jdbcType="VARCHAR"/>
+            <result property="dictCode" column="dict_code" jdbcType="VARCHAR"/>
+            <result property="itemValue" column="item_value" jdbcType="VARCHAR"/>
+            <result property="itemText" column="item_text" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        dict_name,dict_code,item_value,
+        item_text
+    </sql>
+</mapper>

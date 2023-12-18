@@ -24,9 +24,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://116.62.213.90/prize?tinyInt1isBit=false"
-                        userId="prize"
-                        password="prize">
+                        connectionURL="jdbc:mysql://prize:9007/jeecg-boot?tinyInt1isBit=false"
+                        userId="root"
+                        password="root">
         </jdbcConnection>
 
         <javaTypeResolver type="com.JavaTypeResolverDefaultImpl">
@@ -49,7 +49,8 @@
 
         <table tableName="%">
 
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" useGeneratedKeys="true" jdbcType="VARCHAR"/>
+
         </table>
     </context>
 </generatorConfiguration>
