@@ -62,6 +62,7 @@ public class GameController {
         //获得活动信息列表
         CardGame list =gameMapper.selectByPrimaryKey(gameid);
         ApiResult<CardGame> result = new ApiResult<>(1, "成功", list);
+        result.setNow(new Date());
         return result;
     }
 
@@ -87,13 +88,13 @@ public class GameController {
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
         //获得中奖列表
-        PageHelper.startPage(curpage,limit);
-        Page<ViewCardUserHit> page=hitMapper.Page(gameid);
-        long total = page.getTotal();
-        ApiResult<PageBean<ViewCardUserHit>> result =new ApiResult<PageBean<ViewCardUserHit>>(1,"成功",
-                new PageBean<ViewCardUserHit>(curpage,limit,total,page));
-        result.setNow(new Date());
-        return result;
+        Page<Object> page = PageHelper.startPage(curpage, limit);
+        ViewCardUserHitExample example = new ViewCardUserHitExample();
+        example.createCriteria().andGameidEqualTo(gameid);
+        List<ViewCardUserHit> list=hitMapper.selectByExample(example);
+        return new ApiResult<>(1,"成功",
+                new PageBean<ViewCardUserHit>(curpage,limit,page.getTotal(), list));
+
     }
 
 

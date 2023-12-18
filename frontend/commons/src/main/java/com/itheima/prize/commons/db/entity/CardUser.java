@@ -11,6 +11,20 @@ public class CardUser implements Serializable {
      *
      * @mbg.generated
      */
+    public CardUser(SysUser sysUser){
+        this.id = Integer.valueOf(sysUser.getId());
+        this.uname=sysUser.getUsername();
+        this.pic=sysUser.getAvatar();
+        this.passwd=sysUser.getPassword();
+        this.realname=sysUser.getRealname();
+        //DOTO 座机号改成身份证号
+        this.idcard= sysUser.getOrgCode();
+        this.phone=sysUser.getPhone();
+        //身份改成会员等级
+        this.level=sysUser.getUserIdentity();
+        this.createtime=sysUser.getCreateTime();
+        this.updatetime=sysUser.getUpdateTime();
+    }
     private Integer id;
 
     /**
