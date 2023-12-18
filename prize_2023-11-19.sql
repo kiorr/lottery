@@ -1442,25 +1442,25 @@ FROM `card_user_hit` group by `card_user_hit`.`gameid`;
 # 导出视图 view_card_user_hit
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `view_card_user_hit`; DROP VIEW IF EXISTS `view_card_user_hit`;
+    DROP TABLE IF EXISTS `view_card_user_hit`; DROP VIEW IF EXISTS `view_card_user_hit`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_card_user_hit`
-AS SELECT
-   `h`.`id` AS `id`,
-   `g`.`title` AS `title`,
-   `sd2`.`dict_value` AS `type`,
-   `u`.`uname` AS `uname`,
-   `u`.`realname` AS `realname`,
-   `u`.`idcard` AS `idcard`,
-   `u`.`phone` AS `phone`,
-   `sd1`.`dict_value` AS `level`,
-   `p`.`name` AS `name`,
-   `p`.`price` AS `price`,
-   `h`.`gameid` AS `gameid`,
-   `h`.`userid` AS `userid`,
-   `h`.`productid` AS `productid`,
-   `h`.`hittime` AS `hittime`
-FROM (((((`card_game` `g` join `card_product` `p`) join `card_user` `u`) join `card_user_hit` `h`) join `sys_dict` `sd1` on(((`u`.`level` = `sd1`.`dict_key`) and (`sd1`.`dict_type` = 'card_user_level')))) join `sys_dict` `sd2` on(((`g`.`type` = `sd2`.`dict_key`) and (`sd2`.`dict_type` = 'card_game_type')))) where ((`h`.`gameid` = `g`.`id`) and (`h`.`userid` = `u`.`id`) and (`h`.`productid` = `p`.`id`)) order by `h`.`hittime` desc;
+    CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_card_user_hit`
+    AS SELECT
+       `h`.`id` AS `id`,
+       `g`.`title` AS `title`,
+       `sd2`.`dict_value` AS `type`,
+       `u`.`uname` AS `uname`,
+       `u`.`realname` AS `realname`,
+       `u`.`idcard` AS `idcard`,
+       `u`.`phone` AS `phone`,
+       `sd1`.`dict_value` AS `level`,
+       `p`.`name` AS `name`,
+       `p`.`price` AS `price`,
+       `h`.`gameid` AS `gameid`,
+       `h`.`userid` AS `userid`,
+       `h`.`productid` AS `productid`,
+       `h`.`hittime` AS `hittime`
+    FROM (((((`card_game` `g` join `card_product` `p`) join `card_user` `u`) join `card_user_hit` `h`) join `sys_dict` `sd1` on(((`u`.`level` = `sd1`.`dict_key`) and (`sd1`.`dict_type` = 'card_user_level')))) join `sys_dict` `sd2` on(((`g`.`type` = `sd2`.`dict_key`) and (`sd2`.`dict_type` = 'card_game_type')))) where ((`h`.`gameid` = `g`.`id`) and (`h`.`userid` = `u`.`id`) and (`h`.`productid` = `p`.`id`)) order by `h`.`hittime` desc;
 
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

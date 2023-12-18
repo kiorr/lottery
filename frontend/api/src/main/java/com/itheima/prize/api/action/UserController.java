@@ -1,29 +1,28 @@
 package com.itheima.prize.api.action;
 
 import com.github.pagehelper.Page;
-import com.itheima.prize.commons.config.RedisKeys;
-import com.itheima.prize.commons.db.entity.*;
+import com.github.pagehelper.PageHelper;
+import com.itheima.prize.commons.db.entity.CardUser;
+import com.itheima.prize.commons.db.entity.CardUserDto;
+import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.mapper.CardUserGamesMapper;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
-import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.smartcardio.Card;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -42,8 +41,8 @@ public class UserController {
     public ApiResult info(HttpServletRequest request) {
         CardUser user = (CardUser) request.getSession().getAttribute("user");
         //获得用户参与活动、中奖次数
-        Integer games = cardUserGamesMapper.getGamesNumByUserId(user.getId());
-        Integer prises = cardUserGamesMapper.getPrizesNumByUserId(user.getId());
+        Integer games = cardUserGamesMapper.getGamesNumByUserId(Integer.valueOf(user.getId()));
+        Integer prises = cardUserGamesMapper.getPrizesNumByUserId(Integer.valueOf(user.getId()));
         CardUserDto cardUserDto = new CardUserDto();
         BeanUtils.copyProperties(user,cardUserDto);
         cardUserDto.setGames(games);

@@ -11,5 +11,5 @@ public interface GameLoadMapper {
     @Select("select p.*,cgp.amount from card_product p " +
             "join card_game_product cgp on p.id=cgp.productid " +
             "where cgp.gameid=#{gameId,jdbcType=INTEGER}")
-    public List<CardProductDto> getByGameId(int gameId);
+    public List<CardProductDto> getByGameId(String gameId);
 }

@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,7 +101,7 @@ public class TestController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult reset(@PathVariable int gameid){
-        CardGame game = cardGameMapper.selectByPrimaryKey(gameid);
+        CardGame game = cardGameMapper.selectByPrimaryKey(Integer.toString(gameid));
         game.setStatus(0);
         game.setStarttime(DateUtils.addMinutes(new Date(),2));
         game.setEndtime(DateUtils.addMinutes(new Date(),4));

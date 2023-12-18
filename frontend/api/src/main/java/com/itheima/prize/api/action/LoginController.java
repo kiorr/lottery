@@ -1,10 +1,9 @@
 package com.itheima.prize.api.action;
 
-import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
-import com.itheima.prize.commons.db.entity.CardUserDto;
-import com.itheima.prize.commons.db.entity.CardUserExample;
+import com.itheima.prize.commons.db.entity.SysUser;
 import com.itheima.prize.commons.db.mapper.CardUserMapper;
+import com.itheima.prize.commons.db.mapper.SysUserMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PasswordUtil;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -12,19 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -33,6 +24,8 @@ public class LoginController {
     @Autowired
     private CardUserMapper userMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -44,16 +37,18 @@ public class LoginController {
     })
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
         ApiResult result = new ApiResult<>();
+        SysUser sysUser = sysUserMapper.selectByName(account);
+        CardUser cardUser = new CardUser(sysUser);
         //加密
-        String encodePassword = PasswordUtil.encodePassword(password);
+
         CardUser user=userMapper.selectByName(account);
         //设置缓存登录次数5
         if(redisUtil.get(account)==null){
             redisUtil.set(account, 5);
         }
         Integer total2 = (Integer)redisUtil.get(account);
-        /*System.out.println("---------------");
-        System.out.println(total2);*/
+        //md5加密
+        String encodePassword = PasswordUtil.encrypt(account, password,sysUser.getSalt());
         //判断密码是否正确
         //将缓存登录次数-1，直到为0重新登陆
         if(!(user.getPasswd().equals(encodePassword))){
