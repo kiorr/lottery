@@ -3,9 +3,12 @@ package com.itheima.prize.commons.db.mapper;
 import com.github.pagehelper.Page;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
-import java.util.List;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectKey;
 
-import org.apache.ibatis.annotations.*;
+import java.util.List;
 
 @Mapper
 public interface ViewCardUserHitMapper {
@@ -80,5 +83,5 @@ public interface ViewCardUserHitMapper {
      */
     int updateByExample(@Param("record") ViewCardUserHit record, @Param("example") ViewCardUserHitExample example);
 
-    Page<ViewCardUserHit> Page(@Param("gameid")Integer gameid);
+    Page<ViewCardUserHit> Page(@Param("gameid")String gameid);
 }

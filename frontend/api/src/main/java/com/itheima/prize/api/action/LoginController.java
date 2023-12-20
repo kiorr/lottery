@@ -38,10 +38,8 @@ public class LoginController {
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
         ApiResult result = new ApiResult<>();
         SysUser sysUser = sysUserMapper.selectByName(account);
-        CardUser cardUser = new CardUser(sysUser);
+        CardUser user = new CardUser(sysUser);
         //加密
-
-        CardUser user=userMapper.selectByName(account);
         //设置缓存登录次数5
         if(redisUtil.get(account)==null){
             redisUtil.set(account, 5);

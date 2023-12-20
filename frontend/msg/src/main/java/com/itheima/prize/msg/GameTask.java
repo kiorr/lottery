@@ -72,12 +72,12 @@ public class GameTask {
             //活动奖品信息
             List<CardProductDto> products = gameLoadMapper.getByGameId(game.getId());
             Map<Integer,CardProduct> productMap = new HashMap<>(products.size());
-            products.forEach(p -> productMap.put(p.getId(),p));
+            products.forEach(p -> productMap.put(Integer.valueOf(p.getId()),p));
             log.info("load product type:{}",productMap.size());
 
             //奖品数量等配置信息
             CardGameProductExample productExample = new CardGameProductExample();
-            productExample.createCriteria().andGameidEqualTo(game.getId());
+            productExample.createCriteria().andGameidEqualTo(Integer.valueOf(game.getId()));
             List<CardGameProduct> gameProducts = gameProductMapper.selectByExample(productExample);
             log.info("load bind product:{}",gameProducts.size());
 
@@ -108,7 +108,7 @@ public class GameTask {
 
             //奖品策略配置信息
             CardGameRulesExample rulesExample = new CardGameRulesExample();
-            rulesExample.createCriteria().andGameidEqualTo(game.getId());
+            rulesExample.createCriteria().andGameidEqualTo(Integer.valueOf(game.getId()));
             List<CardGameRules> rules = gameRulesMapper.selectByExample(rulesExample);
             //遍历策略，存入redis hset
             rules.forEach(r -> {

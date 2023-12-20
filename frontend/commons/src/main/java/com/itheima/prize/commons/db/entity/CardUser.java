@@ -20,8 +20,8 @@ public class CardUser implements Serializable {
         //DOTO 座机号改成身份证号
         //this.idcard= sysUser.getOrgCode();
         this.phone=sysUser.getPhone();
-        //status改成会员等级
-        this.level= sysUser.getStatus();
+        //identity改成会员等级
+        this.level= sysUser.getUserIdentity();
         this.createtime=sysUser.getCreateTime();
         this.updatetime=sysUser.getUpdateTime();
     }

@@ -265,7 +265,7 @@ public class CardUserHitExample {
             return (Criteria) this;
         }
 
-        public Criteria andGameidEqualTo(Integer value) {
+        public Criteria andGameidEqualTo(String value) {
             addCriterion("gameid =", value, "gameid");
             return (Criteria) this;
         }

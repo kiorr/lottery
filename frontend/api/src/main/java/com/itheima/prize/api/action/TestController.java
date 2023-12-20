@@ -62,7 +62,7 @@ public class TestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult luatest(@PathVariable int gameid){
+    public ApiResult luatest(@PathVariable String gameid){
         Long token = luaScript.tokenCheck("game_"+gameid,String.valueOf(new Date().getTime()));
         String msg = null;
         if (token == 0){
@@ -81,7 +81,7 @@ public class TestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult acttest(@PathVariable int gameid){
+    public ApiResult acttest(@PathVariable String gameid){
         Object o = redisUtil.leftPop(RedisKeys.TOKENS+gameid);
         CardProduct product = (CardProduct) redisUtil.get(RedisKeys.TOKEN + gameid +"_"+o);
         Map map = new HashMap();
@@ -100,8 +100,8 @@ public class TestController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult reset(@PathVariable int gameid){
-        CardGame game = cardGameMapper.selectByPrimaryKey(Integer.toString(gameid));
+    public ApiResult reset(@PathVariable String gameid){
+        CardGame game = cardGameMapper.selectByPrimaryKey(gameid);
         game.setStatus(0);
         game.setStarttime(DateUtils.addMinutes(new Date(),2));
         game.setEndtime(DateUtils.addMinutes(new Date(),4));
