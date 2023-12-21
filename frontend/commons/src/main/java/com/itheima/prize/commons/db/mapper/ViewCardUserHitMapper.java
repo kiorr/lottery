@@ -80,5 +80,5 @@ public interface ViewCardUserHitMapper {
      */
     int updateByExample(@Param("record") ViewCardUserHit record, @Param("example") ViewCardUserHitExample example);
 
-    Page<ViewCardUserHit> pageQuery(@Param("gameid") Integer gameid, @Param("userid") Integer userid);
+    Page<ViewCardUserHit> pageQuery(@Param("gameid") String gameid, @Param("userid") String userid);
 }

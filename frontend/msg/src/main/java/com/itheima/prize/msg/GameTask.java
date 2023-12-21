@@ -71,7 +71,7 @@ public class GameTask {
 
             //活动奖品信息
             List<CardProductDto> products = gameLoadMapper.getByGameId(game.getId());
-            Map<Integer,CardProduct> productMap = new HashMap<>(products.size());
+            Map<String,CardProduct> productMap = new HashMap<>(products.size());
             products.forEach(p -> productMap.put(p.getId(),p));
             log.info("load product type:{}",productMap.size());
 

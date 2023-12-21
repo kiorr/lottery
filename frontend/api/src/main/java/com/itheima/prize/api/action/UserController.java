@@ -3,7 +3,6 @@ package com.itheima.prize.api.action;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
-import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import com.itheima.prize.commons.db.service.CardUserGamesService;
 import com.itheima.prize.commons.db.service.CardUserHitService;
 import com.itheima.prize.commons.utils.ApiResult;
@@ -55,7 +54,7 @@ public class UserController {
             @ApiImplicitParam(name = "curpage",value = "第几页",defaultValue = "1",dataType = "int", example = "1"),
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
-    public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
+    public ApiResult hit(@PathVariable String gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
 
         CardUser user = (CardUser) request.getSession().getAttribute("user");
         PageBean<ViewCardUserHit> page = cardUserHitService.selectByExample(curpage, limit, gameid, user.getId());

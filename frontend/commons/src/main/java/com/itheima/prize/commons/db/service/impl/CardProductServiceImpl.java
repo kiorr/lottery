@@ -1,6 +1,5 @@
 package com.itheima.prize.commons.db.service.impl;
 
-import com.itheima.prize.commons.db.entity.CardProduct;
 import com.itheima.prize.commons.db.entity.CardProductDto;
 import com.itheima.prize.commons.db.mapper.CardProductMapper;
 import com.itheima.prize.commons.db.service.CardProductService;
@@ -17,7 +16,7 @@ public class CardProductServiceImpl implements CardProductService {
     private CardProductMapper cardProductMapper;
 
     @Override
-    public ApiResult<List<CardProductDto>> getByGameid(int gameid) {
+    public ApiResult<List<CardProductDto>> getByGameid(String gameid) {
         List<CardProductDto> cardProductDtos = cardProductMapper.getByGameid(gameid);
         ApiResult<List<CardProductDto>> apiResult = new ApiResult<>(1, "成功", cardProductDtos);
         apiResult.setNow(new Date());

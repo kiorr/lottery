@@ -10,7 +10,7 @@ public interface CardUserGamesMapper {
      * @return
      */
     @Select("select count(id) as num from card_user_game c where userid=#{userid} group by userid")
-    public Integer getGamesNumByUserId(int userid);
+    public Integer getGamesNumByUserId(String userid);
 
     /**
      * 用户中奖数统计
@@ -18,6 +18,6 @@ public interface CardUserGamesMapper {
      * @return
      */
     @Select("select count(id) as num from card_user_hit where userid=#{userid} group by userid")
-    public Integer getPrizesNumByUserId(int userid);
+    public Integer getPrizesNumByUserId(String userid);
 
 }

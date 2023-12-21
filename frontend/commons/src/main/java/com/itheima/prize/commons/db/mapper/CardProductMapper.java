@@ -127,5 +127,5 @@ public interface CardProductMapper {
     })
     int updateByPrimaryKey(CardProduct record);
 
-    List<CardProductDto> getByGameid(int gameid);
+    List<CardProductDto> getByGameid(String gameid);
 }

@@ -29,8 +29,8 @@ import java.util.*;
 @Api(tags = {"抽奖模块"})
 public class ActController {
 
-    @Autowired
-    private CardGameMapper cardGameMapper;
+    /*@Autowired
+    private CardGameMapper cardGameMapper;*/
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -43,9 +43,10 @@ public class ActController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult<Object> act(@PathVariable int gameid, HttpServletRequest request){
+    public ApiResult<Object> act(@PathVariable String gameid, HttpServletRequest request){
         //取出session 用来判断是否登陆
         CardUser user = (CardUser) request.getSession().getAttribute("user");
+        System.out.println(user);
         //根据gameid去返回对应的活动信息
         CardGame game = (CardGame) redisUtil.get(RedisKeys.INFO + gameid);
         Date date = new Date();
@@ -67,6 +68,8 @@ public class ActController {
             apiResult.setNow(date);
             return apiResult;
         }
+        System.out.println("==============================");
+        System.out.println(redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString()));
         //抽奖次数判断
         if (!(!(StringUtils.isEmpty(redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString())))
                         && (((int)redisUtil.hget(RedisKeys.MAXENTER + gameid, user.getLevel().toString()) >
@@ -120,7 +123,7 @@ public class ActController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult info(@PathVariable int gameid){
+    public ApiResult info(@PathVariable String gameid){
         //创建一个map用来存储返回的数据
         HashMap<String, Object> gameMap = new HashMap<>();
         gameMap.put(RedisKeys.INFO + gameid, redisUtil.get(RedisKeys.INFO + gameid));

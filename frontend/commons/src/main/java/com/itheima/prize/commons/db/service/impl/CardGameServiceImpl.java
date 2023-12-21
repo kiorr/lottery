@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.itheima.prize.commons.db.entity.CardGame;
 import com.itheima.prize.commons.db.entity.CardGameExample;
-import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.service.CardGameService;
 import com.itheima.prize.commons.utils.ApiResult;
@@ -35,7 +34,7 @@ public class CardGameServiceImpl implements CardGameService {
     }
 
     @Override
-    public ApiResult<CardGame> getByGameId(int gameid) {
+    public ApiResult<CardGame> getByGameId(String gameid) {
         CardGame cardGame = cardGameMapper.selectByPrimaryKey(gameid);
         ApiResult<CardGame> apiResult = new ApiResult<>(1, "成功", cardGame);
         apiResult.setNow(new Date());

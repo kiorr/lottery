@@ -2,7 +2,6 @@ package com.itheima.prize.api.action;
 
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
-import com.itheima.prize.commons.db.mapper.CardUserMapper;
 import com.itheima.prize.commons.db.service.CardUserService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -20,8 +19,6 @@ import java.util.Date;
 @RequestMapping(value = "/api")
 @Api(tags = {"登录模块"})
 public class LoginController {
-    @Autowired
-    private CardUserMapper cardUserMapper;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired

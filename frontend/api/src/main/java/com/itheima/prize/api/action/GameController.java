@@ -1,7 +1,6 @@
 package com.itheima.prize.api.action;
 
 import com.itheima.prize.commons.db.entity.*;
-import com.itheima.prize.commons.db.mapper.GameLoadMapper;
 import com.itheima.prize.commons.db.service.CardGameService;
 import com.itheima.prize.commons.db.service.CardProductService;
 import com.itheima.prize.commons.db.service.CardUserHitService;
@@ -24,8 +23,6 @@ import java.util.List;
 @RequestMapping(value = "/api/game")
 @Api(tags = {"活动模块"})
 public class GameController {
-    @Autowired
-    private GameLoadMapper loadMapper;
     @Autowired
     private CardGameService cardGameService;
     @Autowired
@@ -54,7 +51,7 @@ public class GameController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult<CardGame> info(@PathVariable int gameid) {
+    public ApiResult<CardGame> info(@PathVariable String gameid) {
         return cardGameService.getByGameId(gameid);
     }
 
@@ -63,7 +60,7 @@ public class GameController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
-    public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
+    public ApiResult<List<CardProductDto>> products(@PathVariable String gameid) {
 
         return cardProductService.getByGameid(gameid);
     }
@@ -75,7 +72,7 @@ public class GameController {
             @ApiImplicitParam(name = "curpage",value = "第几页",defaultValue = "1",dataType = "int", example = "1",required = true),
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
-    public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
+    public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable String gameid,@PathVariable int curpage,@PathVariable int limit) {
         PageBean<ViewCardUserHit> page = cardUserHitService.page(curpage, limit, gameid);
         ApiResult<PageBean<ViewCardUserHit>> apiResult = new ApiResult<>(1, "成功", page);
         apiResult.setNow(new Date());

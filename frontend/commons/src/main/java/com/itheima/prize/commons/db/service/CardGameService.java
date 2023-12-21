@@ -7,5 +7,5 @@ import com.itheima.prize.commons.utils.PageBean;
 public interface CardGameService {
     PageBean<CardGame> page(int curpage, int limit, int status);
 
-    ApiResult<CardGame> getByGameId(int gameid);
+    ApiResult<CardGame> getByGameId(String gameid);
 }

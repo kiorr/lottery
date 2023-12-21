@@ -6,5 +6,5 @@ import com.itheima.prize.commons.utils.ApiResult;
 import java.util.List;
 
 public interface CardProductService {
-    ApiResult<List<CardProductDto>> getByGameid(int gameid);
+    ApiResult<List<CardProductDto>> getByGameid(String gameid);
 }

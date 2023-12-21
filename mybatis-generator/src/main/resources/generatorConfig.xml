@@ -24,9 +24,9 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://116.62.213.90/prize?tinyInt1isBit=false"
-                        userId="prize"
-                        password="prize">
+                        connectionURL="jdbc:mysql://192.168.92.129/jeecg-boot?tinyInt1isBit=false"
+                        userId="root"
+                        password="123">
         </jdbcConnection>
 
         <javaTypeResolver type="com.JavaTypeResolverDefaultImpl">

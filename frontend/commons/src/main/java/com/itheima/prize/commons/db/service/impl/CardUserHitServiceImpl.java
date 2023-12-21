@@ -24,13 +24,13 @@ public class CardUserHitServiceImpl implements CardUserHitService {
     private CardUserGamesMapper cardUserGamesMapper;
 
     @Override
-    public Integer getByUserid(Integer id) {
+    public Integer getByUserid(String id) {
         return cardUserGamesMapper.getPrizesNumByUserId(id);
         /*return cardUserHitMapper.getCountByUserId(id);*/
     }
 
     @Override
-    public PageBean<ViewCardUserHit> selectByExample(int curpage, int limit, Integer gameId, Integer userId) {
+    public PageBean<ViewCardUserHit> selectByExample(int curpage, int limit, String gameId, String userId) {
         /*PageHelper.startPage(curpage, limit);
         ViewCardUserHitExample example = new ViewCardUserHitExample();
         ViewCardUserHitExample.Criteria criteria = example.createCriteria(); // 创建查询条件
@@ -50,7 +50,7 @@ public class CardUserHitServiceImpl implements CardUserHitService {
     }
 
     @Override
-    public PageBean<ViewCardUserHit> page(int curpage, int limit, int gameid) {
+    public PageBean<ViewCardUserHit> page(int curpage, int limit, String gameid) {
         Page<Object> page = PageHelper.startPage(curpage, limit);
         ViewCardUserHitExample example = new ViewCardUserHitExample();
         ViewCardUserHitExample.Criteria criteria = example.createCriteria(); // 创建查询条件

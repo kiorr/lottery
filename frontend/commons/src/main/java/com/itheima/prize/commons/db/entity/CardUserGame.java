@@ -1,9 +1,6 @@
 package com.itheima.prize.commons.db.entity;
 
-import com.alibaba.fastjson.JSON;
-
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.Date;
 
 public class CardUserGame implements Serializable {
@@ -14,14 +11,7 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer id;
-
-
-
-    public Integer getUserid() {
-        return userid;
-    }
-
+    private String id;
 
     /**
      *
@@ -30,7 +20,7 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer userid;
+    private String userid;
 
     /**
      *
@@ -39,7 +29,7 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer gameid;
+    private String gameid;
 
     /**
      *
@@ -56,10 +46,11 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
+    private static final long serialVersionUID = 1L;
 
-    public CardUserGame(){}
+    public CardUserGame() {}
 
-    public CardUserGame(Integer userid, Integer gameid, Date createtime) {
+    public CardUserGame(String userid, String gameid, Date createtime) {
         this.userid = userid;
         this.gameid = gameid;
         this.createtime = createtime;
@@ -73,7 +64,9 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getId() {
+
+
+    public String getId() {
         return id;
     }
 
@@ -85,8 +78,8 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**
@@ -97,7 +90,7 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getUserid(Integer id) {
+    public String getUserid() {
         return userid;
     }
 
@@ -109,8 +102,8 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(String userid) {
+        this.userid = userid == null ? null : userid.trim();
     }
 
     /**
@@ -121,7 +114,7 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getGameid() {
+    public String getGameid() {
         return gameid;
     }
 
@@ -133,8 +126,8 @@ public class CardUserGame implements Serializable {
      *
      * @mbg.generated
      */
-    public void setGameid(Integer gameid) {
-        this.gameid = gameid;
+    public void setGameid(String gameid) {
+        this.gameid = gameid == null ? null : gameid.trim();
     }
 
     /**
@@ -159,19 +152,5 @@ public class CardUserGame implements Serializable {
      */
     public void setCreatetime(Date createtime) {
         this.createtime = createtime;
-    }
-
-    public static void main(String[] args) {
-        CardUserGame game = JSON.parseObject("{\"gameid\":10,\"hittime\":1701848258856,\"userid\":10}",CardUserGame.class);
-//        game.setUserid(123);
-//        game.setGameid(222);
-//        CardUserGame game = new CardUserGame(20,20,new Date());
-//        CardUserHit hit = new CardUserHit(10,10,10,new Date());
-//        game.setUserid(100);
-
-
-       Field[] aa = CardUserGame.class.getDeclaredFields();
-        System.out.println(JSON.toJSONString(game));
-//        System.out.println(JSON.toJSONString(hit));
     }
 }

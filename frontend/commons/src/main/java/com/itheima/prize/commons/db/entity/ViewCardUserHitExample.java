@@ -886,17 +886,17 @@ public class ViewCardUserHitExample {
             return (Criteria) this;
         }
 
-        public Criteria andGameidEqualTo(Integer value) {
+        public Criteria andGameidEqualTo(String value) {
             addCriterion("gameid =", value, "gameid");
             return (Criteria) this;
         }
 
-        public Criteria andGameidNotEqualTo(Integer value) {
+        public Criteria andGameidNotEqualTo(String value) {
             addCriterion("gameid <>", value, "gameid");
             return (Criteria) this;
         }
 
-        public Criteria andGameidGreaterThan(Integer value) {
+        public Criteria andGameidGreaterThan(String value) {
             addCriterion("gameid >", value, "gameid");
             return (Criteria) this;
         }

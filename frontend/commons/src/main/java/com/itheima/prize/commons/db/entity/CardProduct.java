@@ -1,12 +1,8 @@
 package com.itheima.prize.commons.db.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@ApiModel("奖品")
 public class CardProduct implements Serializable {
     /**
      *
@@ -15,8 +11,7 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("id")
-    private Integer id;
+    private String id;
 
     /**
      *
@@ -25,7 +20,6 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("名称")
     private String name;
 
     /**
@@ -35,7 +29,6 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("图片相对路径")
     private String pic;
 
     /**
@@ -45,7 +38,6 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("奖品介绍")
     private String info;
 
     /**
@@ -55,7 +47,6 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("价格")
     private BigDecimal price;
 
     /**
@@ -74,7 +65,7 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -86,8 +77,8 @@ public class CardProduct implements Serializable {
      *
      * @mbg.generated
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**

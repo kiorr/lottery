@@ -10,7 +10,7 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer id;
+    private String id;
 
     /**
      *
@@ -19,7 +19,7 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer gameid;
+    private String gameid;
 
     /**
      *
@@ -73,7 +73,7 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -85,8 +85,8 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**
@@ -97,7 +97,7 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getGameid() {
+    public String getGameid() {
         return gameid;
     }
 
@@ -109,8 +109,8 @@ public class CardGameRules implements Serializable {
      *
      * @mbg.generated
      */
-    public void setGameid(Integer gameid) {
-        this.gameid = gameid;
+    public void setGameid(String gameid) {
+        this.gameid = gameid == null ? null : gameid.trim();
     }
 
     /**

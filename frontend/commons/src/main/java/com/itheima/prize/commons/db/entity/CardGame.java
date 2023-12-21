@@ -1,14 +1,8 @@
 package com.itheima.prize.commons.db.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
-@ApiModel("活动")
 public class CardGame implements Serializable {
     /**
      *
@@ -17,8 +11,7 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("id")
-    private Integer id;
+    private String id;
 
     /**
      *
@@ -27,7 +20,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("活动标题")
     private String title;
 
     /**
@@ -37,7 +29,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("宣传图")
     private String pic;
 
     /**
@@ -47,7 +38,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("活动介绍")
     private String info;
 
     /**
@@ -57,9 +47,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("开始时间")
-//    @DateTimeFormat(pattern="yyyy/MM/dd hh:mm:ss")
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date starttime;
 
     /**
@@ -69,9 +56,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("结束时间")
-//    @DateTimeFormat(pattern="yyyy/MM/dd hh:mm:ss")
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     private Date endtime;
 
     /**
@@ -81,7 +65,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("类型（1=概率类，2=随机类）")
     private Integer type;
 
     /**
@@ -91,7 +74,6 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("状态（0=新建，1=已加载）")
     private Integer status;
 
     /**
@@ -110,7 +92,7 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -122,8 +104,8 @@ public class CardGame implements Serializable {
      *
      * @mbg.generated
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**

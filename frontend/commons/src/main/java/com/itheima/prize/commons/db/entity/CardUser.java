@@ -11,7 +11,7 @@ public class CardUser implements Serializable {
      *
      * @mbg.generated
      */
-    private Integer id;
+    private String id;
 
     /**
      *
@@ -110,7 +110,20 @@ public class CardUser implements Serializable {
      *
      * @mbg.generated
      */
-    public Integer getId() {
+    public CardUser(){}
+    public CardUser(SysUser sysUser){
+        this.id = sysUser.getId();
+        this.pic = sysUser.getAvatar();
+        this.uname = sysUser.getUsername();
+        this.passwd = sysUser.getPassword();
+        this.realname = sysUser.getRealname();
+        this.phone = sysUser.getPhone();
+        this.level = sysUser.getUserIdentity();
+        this.createtime = sysUser.getCreateTime();
+        this.updatetime = sysUser.getUpdateTime();
+    }
+
+    public String getId() {
         return id;
     }
 
@@ -122,8 +135,8 @@ public class CardUser implements Serializable {
      *
      * @mbg.generated
      */
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**
