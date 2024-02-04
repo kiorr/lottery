@@ -48,3 +48,8 @@ proxy:{
 ```
 
 .env.development 中的环境变量需要修改为自己服务器的地址
+
+
+
+vue-node-docker编译环境：
+链接: https://pan.baidu.com/s/19T9n-XpPDL_qUiH-blv0HQ?pwd=3ew5 提取码: 3ew5
