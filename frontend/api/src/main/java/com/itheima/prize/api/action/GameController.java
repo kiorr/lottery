@@ -45,7 +45,9 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        //TODO
+
+        QueryWrapper<CardGame> wrapper = new QueryWrapper<>();
+
         return null;
     }
 

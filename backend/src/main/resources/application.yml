@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: false
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/ruoyi/uploadPath
+  profile: /Users/cangshan/uploadPath
   # 获取ip地址开关
   addressEnabled: false
   # 文件上传类型，本地=local，MinIO=minio（推荐）
@@ -19,8 +19,8 @@ ruoyi:
 #例如：http://192.168.64.100:9005/prize/1701754725603.jpeg
 #所以要保障其可访问性，尤其是docker部署的时候，应该是宿主机暴露的端口！
 minio:
-  url: http://192.168.64.100:9005
-  host: 192.168.64.100
+  url: http://103.144.2.88:9005
+  host: 103.144.2.88
   port: 9005
   bucket: prize
   username: minioadmin
